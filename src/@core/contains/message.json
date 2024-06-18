@@ -1,0 +1,50 @@
+{
+	"CREATE": {
+		"SUCCESS": "Create success",
+		"FAIL": "Create fail"
+	},
+	"GET": {
+		"SUCCESS": "Get success",
+		"FAIL": "Get fail"
+	},
+	"UPDATE": {
+		"SUCCESS": "Update success",
+		"FAIL": "Update fail"
+	},
+	"DELETE": {
+		"SUCCESS": "Delete success",
+		"FAIL": "Delete fail"
+	},
+	"REGISTER": {
+		"SUCCESS": "register is success",
+		"FAILED": "register is failed"
+	},
+	"LOGIN": {
+		"SUCCESS": "Login is success",
+		"FAILED": "Login is failed"
+	},
+	"LOGOUT": {
+		"DONE": "Logout is done"
+	},
+	"EMAIL": {
+		"IS_ALREADY": "Email is already in use",
+		"NOT_FOUND": "Cannot not found email",
+		"WRONG_CREDENTIALS": "Email or Password is wrong"
+	},
+	"USER": {
+		"NOT_FOUND": "User not found",
+		"UPDATED_PASSWORD_SUCCESS": "Updated password is success"
+	},
+	"DB": {
+		"ERROR_CONNECT": "Error initializing database connection:",
+		"INVALID_RESPONSE": "Invalid response from database"
+	},
+	"TOKEN": {
+		"EXPIRE": "Tokens is expire",
+		"INVALID_RESET": "Invalid reset token",
+		"CREATED": "Created new token"
+	},
+	"ROOM": {
+		"IS_ALREADY": "Room Already Exists"
+	}
+}

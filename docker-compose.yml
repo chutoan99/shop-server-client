@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+    database-mysql:
+        image: mysql:8.0
+        restart: always
+        environment:
+            - MYSQL_HOST=roundhouse.proxy.rlwy.net
+            - MYSQL_DATABASE=railway
+            - MYSQL_USERNAME=root
+            - MYSQL_ROOT_PASSWORD=OfKMoJujnUscyTLvpJLANSlolNgWsNTY
+            - MYSQL_PORT=22139
+
+    backend:
+        image: node:latest
+        environment:
+            - PORT=8080
+            - MONGODB_CONNECT=mongodb://mongo:HakJkAwAZXqvlirrRDrDJvDkYQKCePSC@roundhouse.proxy.rlwy.net:41361
+            - ACCSEE_TOKEN_SECRECT=chutoan
+            - URL_BACKEND=http://localhost:8080
+            - SECRET_KEY=chutoan
+            - LIMIT=96
+            - USER_EMAIL=truongvanchutoan1999@gmail.com
+            - PASS_EMAIL=glfmdmgmxvttuwls
+            - CLOUDINARY_NAME=dxcershra
+            - CLOUDINARY_KEY=865152717515413
+            - CLOUDINARY_SECRET=FFgNRNDBBCIq3Kypc3snCdR9V5Y
+        ports:
+            - '9000:9000'
+
+    mongodb:
+        image: mongo:latest
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=HakJkAwAZXqvlirrRDrDJvDkYQKCePSC
+        ports:
+            - '27017:27017'
+
+    redis:
+        image: redis:latest
+        environment:
+            - REDIS_URL=redis://default:moEzzexIdEvMKeSCduvtTcBKaMNgZBSr@monorail.proxy.rlwy.net:58456
+        ports:
+            - '6379:6379'

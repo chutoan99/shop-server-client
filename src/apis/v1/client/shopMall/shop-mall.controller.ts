@@ -4,6 +4,7 @@ import ShopMallService from './shop-mall.service'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 class ShopMallController {
 	private readonly _shopMallService: ShopMallService
+  
 	constructor() {
 		this._shopMallService = new ShopMallService()
 	}

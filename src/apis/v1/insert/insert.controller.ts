@@ -2,6 +2,7 @@ import InsertService from './insert.service'
 
 class InsertControllers {
 	private readonly _insertService: InsertService
+  
 	constructor() {
 		this._insertService = new InsertService()
 	}

@@ -9,6 +9,7 @@ interface IBatchListRepository {
 export default class BatchListRepository implements IBatchListRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._baseDataBase = new BaseDataBase()

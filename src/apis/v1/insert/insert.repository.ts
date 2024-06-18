@@ -16,6 +16,7 @@ import { LoggerSystem } from '~/systems/logger'
 export default class InsertRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._baseDataBase = new BaseDataBase()
 		this._loggerSystem = new LoggerSystem()

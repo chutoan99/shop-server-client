@@ -10,6 +10,7 @@ export default class SearchSuggestRepository
 {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._baseDataBase = new BaseDataBase()

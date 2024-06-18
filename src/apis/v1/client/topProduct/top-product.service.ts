@@ -11,6 +11,7 @@ export default class TopProductService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _redisSystem: RedisSystem
 	private readonly _topProductRepository: TopProductRepository
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._redisSystem = new RedisSystem()

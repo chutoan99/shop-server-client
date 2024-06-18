@@ -5,6 +5,7 @@ import STATUS_CODE from '~/@core/contains/statusCode.json'
 
 class CategoriesTreeController {
 	private readonly _categoriesTreeService: CategoriesTreeService
+  
 	constructor() {
 		this._categoriesTreeService = new CategoriesTreeService()
 	}

@@ -12,13 +12,17 @@ import UserRepository from '../user/user.repository'
 import UserService from '../user/user.service'
 import { generateShopId, generateUserId } from '~/helpers/generateId'
 import { ROLE } from '~/systems/other/role.interface'
-import { LoggerSystem } from '~/systems/logger/logger.system'
 import AuthRepository from './auth.repository'
+import { ForgotPasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from './auth.dto'
+import { WriteResponse } from '~/systems/other/response.system'
+import { loginResponse } from './auth.response'
+import { LoggerSystem } from '~/systems/logger'
 export default class AuthService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _userRepository: UserRepository
 	private readonly _authRepository: AuthRepository
 	private readonly _userService: UserService
+  
 	constructor() {
 		this._userService = new UserService()
 		this._userRepository = new UserRepository()
@@ -31,7 +35,7 @@ export default class AuthService {
 
 	//* B1: Kiểm tra email đã tồn tại hay chưa
 	//* B2: Tạo User
-	public Register = async (payload: User) => {
+	public Register = async (payload: RegisterDto): Promise<WriteResponse> => {
 		try {
 			const checkResult = await this._userService.checkExistUser(
 				payload.email
@@ -71,7 +75,7 @@ export default class AuthService {
 	//* B1 KIỂM TRA MẬT KHẨU ĐÚNG HAY KHÔNG
 	//* B2 TẠO ACCESS_TOKEN (Xác thực người dùng, quân quyên người dùng) VÀ REFRESH_TOKEN()
 	//* B3 LƯU REFRESH_TOKEN VÀO DB VÀ COOKIE
-	public Login = async (payload: User) => {
+	public Login = async (payload: LoginDto) : Promise<loginResponse | WriteResponse>=> {
 		try {
 			const user: User = await this._userRepository.findUser(
 				payload?.email
@@ -114,7 +118,6 @@ export default class AuthService {
 				return {
 					err: 2,
 					msg: MESSAGE.EMAIL.WRONG_CREDENTIALS,
-					access_token: null
 				}
 			}
 		} catch (error: any) {
@@ -129,7 +132,7 @@ export default class AuthService {
 	//* B4: Client gửi api kèm token
 	//* B5: Check token có giống với token mà server gửi mail hay không
 	//* B6: Change password
-	public ForgotPassword = async (payload: User) => {
+	public ForgotPassword = async (payload: ForgotPasswordDto) => {
 		try {
 			const user: User = await this._userRepository.findUser(
 				payload?.email
@@ -172,7 +175,7 @@ export default class AuthService {
 
 	//* B1: Check thời gian token còn hạn hay không
 	//* B2: Kiểm tra thời gian lưu trong db và thời gian thực xem tojen có hết hạn hay chưa
-	public ResetPassword = async (payload: any) => {
+	public ResetPassword = async (payload: ResetPasswordDto) => {
 		try {
 			const user: User = await this._userRepository.findUser(
 				payload?.email
@@ -269,38 +272,6 @@ export default class AuthService {
 					msg: MESSAGE.LOGOUT.DONE
 				}
 			}
-		} catch (error: any) {
-			this._loggerSystem.error(error)
-			throw error
-		}
-	}
-
-	public LoginGoogle = async (token: any) => {
-		try {
-			// jwt.verify(token, '', function (err: any, decoded: any) {
-			//   if (err) {
-			//     console.log('Giải mã thất bại: ', err)
-			//   } else {
-			//     console.log('Payload giải mã')
-			//   }
-			// })
-			return {}
-		} catch (error: any) {
-			this._loggerSystem.error(error)
-			throw error
-		}
-	}
-
-	public LoginFacebook = async (token: any) => {
-		try {
-			// jwt.verify(token, '', function (err: any, decoded: any) {
-			//   if (err) {
-			//     console.log('Giải mã thất bại: ', err)
-			//   } else {
-			//     console.log('Payload giải mã')
-			//   }
-			// })
-			return {}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

@@ -9,6 +9,7 @@ import { WriteResponse } from '~/systems/other/response.system'
 export default class SearchHistoryService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _searchHistoryRepository: SearchHistoryRepository
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._searchHistoryRepository = new SearchHistoryRepository()

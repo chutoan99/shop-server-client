@@ -19,6 +19,7 @@ interface ICartRepository {
 export default class CartRepository implements ICartRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase = new BaseDataBase()
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._baseDataBase = new BaseDataBase()

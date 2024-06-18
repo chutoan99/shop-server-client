@@ -11,6 +11,7 @@ interface IShopRepository {
 export default class ShopRepository implements IShopRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._baseDataBase = new BaseDataBase()

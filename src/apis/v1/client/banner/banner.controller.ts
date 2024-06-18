@@ -6,6 +6,7 @@ import { BannerResponse } from './banner.interface'
 
 class BannerController {
 	private readonly _bannerService: BannerService
+  
 	constructor() {
 		this._bannerService = new BannerService()
 	}

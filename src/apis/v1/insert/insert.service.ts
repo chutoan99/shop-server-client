@@ -6,6 +6,7 @@ export default class InsertService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _insertRepository: InsertRepository
 	private readonly _insertHelper: InsertHelper
+  
 	constructor() {
 		this._insertHelper = new InsertHelper()
 		this._loggerSystem = new LoggerSystem()

@@ -4,6 +4,7 @@ import TopProductService from './top-product.service'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 class TopProductController {
 	private readonly _topProductService: TopProductService
+  
 	constructor() {
 		this._topProductService = new TopProductService()
 	}

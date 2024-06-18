@@ -11,6 +11,7 @@ export default class ShopService {
 	private readonly _redisSystem: RedisSystem
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _shopRepository: ShopRepository
+  
 	constructor() {
 		this._redisSystem = new RedisSystem()
 		this._loggerSystem = new LoggerSystem()

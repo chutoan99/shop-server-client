@@ -11,6 +11,7 @@ export default class UserService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _userRepository: UserRepository
 	private readonly _cloudSystem: CloudSystem
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._userRepository = new UserRepository()

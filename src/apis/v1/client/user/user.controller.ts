@@ -8,6 +8,7 @@ import CloudSystem from '~/systems/cloudinary/cloud.system'
 class UserController {
 	private readonly _userService: UserService
 	private readonly _cloudSystem: CloudSystem
+  
 	constructor() {
 		this._userService = new UserService()
 		this._cloudSystem = new CloudSystem()

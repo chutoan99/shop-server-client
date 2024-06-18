@@ -4,6 +4,7 @@ import SearchSuggestService from './search-suggest.service'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 class SearchSuggestController {
 	private readonly _searchSuggestService: SearchSuggestService
+  
 	constructor() {
 		this._searchSuggestService = new SearchSuggestService()
 	}

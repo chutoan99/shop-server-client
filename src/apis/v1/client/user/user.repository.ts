@@ -14,6 +14,7 @@ interface IUserRepository {
 export default class UserRepository implements IUserRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._baseDataBase = new BaseDataBase()
 		this._loggerSystem = new LoggerSystem()

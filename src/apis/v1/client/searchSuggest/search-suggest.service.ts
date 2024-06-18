@@ -11,6 +11,7 @@ export default class SearchSuggestService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _redisSystem: RedisSystem
 	private readonly _searchSuggestRepository: SearchSuggestRepository
+  
 	constructor() {
 		this._redisSystem = new RedisSystem()
 		this._loggerSystem = new LoggerSystem()

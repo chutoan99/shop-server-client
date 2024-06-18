@@ -4,6 +4,7 @@ import CartService from './cart.service'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 class CartController {
 	private readonly _cartService: CartService
+  
 	constructor() {
 		this._cartService = new CartService()
 	}

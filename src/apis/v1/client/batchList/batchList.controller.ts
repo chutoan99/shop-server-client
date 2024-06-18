@@ -4,6 +4,7 @@ import { internalServerError } from '~/@core/systems/handle_errors'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 class BatchListController {
 	private readonly _batchListService: BatchListService
+  
 	constructor() {
 		this._batchListService = new BatchListService()
 	}

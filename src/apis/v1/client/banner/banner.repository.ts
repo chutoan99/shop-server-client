@@ -10,6 +10,7 @@ interface IBannerRepository {
 export default class BannerRepository implements IBannerRepository {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _baseDataBase: BaseDataBase
+  
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._baseDataBase = new BaseDataBase()

@@ -1,14 +1,22 @@
 import { Request, Response } from 'express'
 import joi from 'joi'
 import AuthService from './auth.service'
-import { email, password, token } from '~/helpers/validate'
-
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 import { internalServerError, badRequest } from '~/@core/systems/handle_errors'
+import { AuthValidator } from './auth.validator'
+import {
+	ForgotPasswordDto,
+	LoginDto,
+	RegisterDto,
+	ResetPasswordDto
+} from './auth.dto'
 class AuthClientController {
 	private readonly _authService: AuthService
+	private readonly _authValidator: AuthValidator
+
 	constructor() {
 		this._authService = new AuthService()
+		this._authValidator = new AuthValidator()
 	}
 
 	public Register = async (
@@ -16,16 +24,11 @@ class AuthClientController {
 		res: Response
 	): Promise<Response<any, Record<string, any>>> => {
 		try {
-			const { error }: { error: joi.ValidationError | undefined } = joi
-				.object({ email, password })
-				.validate({
-					email: req.body.email,
-					password: req.body.password
-				})
-
+			const payload: RegisterDto = req.body
+			const { error } = this._authValidator.Register(payload)
 			if (error) return badRequest(error.details[0]?.message, res)
 
-			const response = await this._authService.Register(req.body)
+			const response = await this._authService.Register(payload)
 
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)
 		} catch (error) {
@@ -38,21 +41,22 @@ class AuthClientController {
 		res: Response
 	): Promise<Response<any, Record<string, any>>> => {
 		try {
-			const { error }: { error: joi.ValidationError | undefined } = joi
-				.object({ email, password })
-				.validate({
-					email: req.body.email,
-					password: req.body.password
-				})
+			const payload: LoginDto = req.body
+			const { error }: { error: joi.ValidationError | undefined } =
+				this._authValidator.Login(payload)
 
 			if (error) return badRequest(error.details[0]?.message, res)
 
-			const response = await this._authService.Login(req.body)
-			res.cookie('refreshToken', response.refresh_token, {
-				httpOnly: true,
-				maxAge: 7 * 24 * 60 * 60 * 1000
-			})
-			delete response.refresh_token
+			const response = await this._authService.Login(payload)
+			if ('refresh_token' in response) {
+				// Set cookie for refresh token
+				res.cookie('refreshToken', response.refresh_token, {
+					httpOnly: true,
+					maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+				})
+
+				delete response.refresh_token
+			}
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)
 		} catch (error) {
 			return internalServerError(res)
@@ -64,11 +68,8 @@ class AuthClientController {
 		res: Response
 	): Promise<Response<any, Record<string, any>>> => {
 		try {
-			const { error }: { error: joi.ValidationError | undefined } = joi
-				.object({ email })
-				.validate({
-					email: req.query.email
-				})
+			const params: ForgotPasswordDto = req.query
+			const { error } = this._authValidator.ForgotPassword(params)
 			if (error) return badRequest(error.details[0]?.message, res)
 
 			const response = await this._authService.ForgotPassword(req.query)
@@ -83,17 +84,12 @@ class AuthClientController {
 		res: Response
 	): Promise<Response<any, Record<string, any>>> => {
 		try {
-			const { error }: { error: joi.ValidationError | undefined } = joi
-				.object({ email, password, token })
-				.validate({
-					email: req.body.email,
-					password: req.body.password,
-					token: req.body.token
-				})
+			const payload: ResetPasswordDto = req.body
 
+			const { error } = this._authValidator.ForgotPassword(payload)
 			if (error) return badRequest(error.details[0]?.message, res)
 
-			const response = await this._authService.ResetPassword(req.body)
+			const response = await this._authService.ResetPassword(payload)
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)
 		} catch (error) {
 			return internalServerError(res)
@@ -129,28 +125,6 @@ class AuthClientController {
 				secure: true
 			})
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)
-		} catch (error) {
-			return internalServerError(res)
-		}
-	}
-
-	public LoginGoogle = async (
-		req: Request,
-		res: Response
-	): Promise<Response<any, Record<string, any>> | undefined> => {
-		try {
-			res.redirect('/')
-		} catch (error) {
-			return internalServerError(res)
-		}
-	}
-
-	public LoginFacebook = async (
-		req: Request,
-		res: Response
-	): Promise<Response<any, Record<string, any>> | undefined> => {
-		try {
-			res.redirect('/')
 		} catch (error) {
 			return internalServerError(res)
 		}

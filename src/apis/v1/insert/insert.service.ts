@@ -1,5 +1,6 @@
 import InsertRepository from './insert.repository'
 import InsertHelper from './insert.helper'
+import axios from 'axios'
 import { LoggerSystem } from '~/systems/logger'
 export default class InsertService {
 	private readonly _loggerSystem: LoggerSystem
@@ -11,12 +12,16 @@ export default class InsertService {
 		this._insertRepository = new InsertRepository()
 	}
 
-	public FormatIndustrie() {
+	public FormatIndustries = async () => {
 		try {
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
 			const dataBatch: any[][] = []
 			for (let index = 1; index < 15; index++) {
-				const jsonData = require(`../../../../../data/cate/cate_${index}.json`)
+				const response = await axios.get(
+					`https://raw.githubusercontent.com/chutoan99/shop-data/main/cate/cate_${index}.json`
+				)
+				const jsonData = response.data
+
 				const globalCats = jsonData?.data.global_cats
 				for (const item of globalCats) {
 					for (let j = 0; j < item.path.length; j++) {
@@ -48,13 +53,17 @@ export default class InsertService {
 		}
 	}
 
-	public FormatHomeCategory() {
+	public FormatHomeCategory = async () => {
 		try {
 			const batchSize = 10
 			const dataBatch: any[][] = []
 			const dataBatchChild: any[][] = []
-			const jsonData = require('../../../../../data/category_tree.json')
-			for (const item of jsonData.data.category_list) {
+
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/category_tree.json'
+			)
+
+			for (const item of response.data.data.category_list) {
 				const newCategory = this._insertHelper.processDataCategory(item)
 				dataBatch.push([
 					newCategory.id,
@@ -106,22 +115,27 @@ export default class InsertService {
 		}
 	}
 
-	public FormatBanner() {
+	public FormatBanner = async () => {
 		try {
 			const dataBatch: any[][] = []
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
-			const jsonData = require('../../../../../data/banner.json')
-			jsonData?.data?.space_banners[0]?.banners?.forEach((item: any) => {
-				// ************************************************************
-				// CREATE MODE
-				// ************************************************************
-				const newBanner = this._insertHelper.processDataBanner(item)
-				dataBatch.push([newBanner.image_url])
-				if (dataBatch.length === batchSize) {
-					this._insertRepository.InsertBanner(dataBatch)
-					dataBatch.length = 0
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/banner.json'
+			)
+
+			response.data?.data?.space_banners[0]?.banners?.forEach(
+				(item: any) => {
+					// ************************************************************
+					// CREATE MODE
+					// ************************************************************
+					const newBanner = this._insertHelper.processDataBanner(item)
+					dataBatch.push([newBanner.image_url])
+					if (dataBatch.length === batchSize) {
+						this._insertRepository.InsertBanner(dataBatch)
+						dataBatch.length = 0
+					}
 				}
-			})
+			)
 			if (dataBatch.length > 0) {
 				this._insertRepository.InsertBanner(dataBatch)
 			}
@@ -131,12 +145,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatShopMall() {
+	public FormatShopMall = async () => {
 		try {
 			const dataBatch: any[][] = []
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
-			const jsonData = require('../../../../../data/shopMall.json')
-			jsonData?.data?.shops?.forEach((item: any) => {
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/shopMall.json'
+			)
+			response?.data?.data?.shops?.forEach((item: any) => {
 				// ************************************************************
 				// CREATE MODE
 				// ************************************************************
@@ -161,12 +177,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatSearchSuggestion() {
+	public FormatSearchSuggestion = async () => {
 		try {
 			const dataBatch: any[][] = []
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
-			const jsonData = require('../../../../../data/search_suggestion.json')
-			jsonData?.forEach((item: any) => {
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/search_suggestion.json'
+			)
+			response?.data?.forEach((item: any) => {
 				// ************************************************************
 				// CREATE MODE
 				// ************************************************************
@@ -187,12 +205,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatInsertNotify() {
+	public FormatInsertNotify = async () => {
 		try {
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
 			const dataBatch: any[][] = []
-			const jsonData = require('../../../../../data/notify.json')
-			jsonData?.forEach((item: any) => {
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/notify.json'
+			)
+			response?.data?.forEach((item: any) => {
 				const newNotify = this._insertHelper.processDataNotify(item)
 				// ************************************************************
 				// CREATE MODE
@@ -219,12 +239,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatBatchList() {
+	public FormatBatchList = async () => {
 		try {
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
 			const dataBatch: any[][] = []
-			const jsonData = require('../../../../../data/batch_list.json')
-			jsonData?.data?.banners[1]?.banners.forEach((item: any) => {
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/batch_list.json'
+			)
+			response?.data?.data?.banners[1]?.banners.forEach((item: any) => {
 				// ************************************************************
 				// CREATE MODE
 				// ************************************************************
@@ -250,12 +272,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatTopProduct() {
+	public FormatTopProduct = async () => {
 		try {
 			const batchSize = 10 // Số lượng bản ghi trong mỗi batch
 			const dataBatch: any[][] = []
-			const jsonData = require('../../../../../data/top.json')
-			jsonData?.data?.sections[0]?.data?.top_product?.forEach(
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/top.json'
+			)
+			response?.data?.data?.sections[0]?.data?.top_product?.forEach(
 				(item: any) => {
 					const newData =
 						this._insertHelper.processDataTopProduct(item)
@@ -286,12 +310,14 @@ export default class InsertService {
 		}
 	}
 
-	public FormatFlashSale() {
+	public FormatFlashSale = async () => {
 		try {
 			const batchSize = 10
 			const dataBatch: any[][] = []
-			const jsonData = require('../../../../../data/flash_sale.json')
-			jsonData?.data?.items?.forEach((item: any) => {
+			const response = await axios.get(
+				'https://github.com/chutoan99/shop-data/blob/main/flash_sale.json'
+			)
+			response?.data?.data?.items?.forEach((item: any) => {
 				// ************************************************************
 				// CREATE MODE
 				// ************************************************************
@@ -330,14 +356,18 @@ export default class InsertService {
 		}
 	}
 
-	FormatShopAndUser(start: number, end: number) {
+	FormatShopAndUser = async (start: number, end: number) => {
 		try {
 			const batchSize = 2 // Số lượng bản ghi trong mỗi batch
 			const dataUsers: any[][] = []
 			const dataShops: any[][] = []
 			for (let index = start; index < end; index++) {
-				const jsonData = require(`../../../../../data/shopDetail/shopDetail_${index}.json`)
-				const newShop = this._insertHelper.processDataShop(jsonData)
+				const response = await axios.get(
+					`https://github.com/chutoan99/shop-data/blob/main/shopDetail/shopDetail_${index}.json`
+				)
+				const newShop = this._insertHelper.processDataShop(
+					response?.data
+				)
 				dataShops.push([
 					newShop.id,
 					newShop.userid,
@@ -370,7 +400,9 @@ export default class InsertService {
 				// ************************************************************
 				// CREATE MODE
 				// ************************************************************
-				const newUser = this._insertHelper.processDataUser(jsonData)
+				const newUser = this._insertHelper.processDataUser(
+					response?.data
+				)
 				dataUsers.push([
 					newUser.id,
 					newUser.shopid,
@@ -403,14 +435,16 @@ export default class InsertService {
 		}
 	}
 
-	public FormatComment(start: number, end: number) {
+	public FormatComment = async (start: number, end: number) => {
 		try {
 			const batchSize = 500 // Số lượng bản ghi trong mỗi batch
 			const dataComment: any[][] = []
 			const dataRatingReply: any[][] = []
 			for (let index = start; index < end; index++) {
-				const jsonData = require(`../../../../../data/ratings/rating_${index}.json`)
-				jsonData?.data?.ratings?.forEach((item: any) => {
+				const response = await axios.get(
+					`https://github.com/chutoan99/shop-data/blob/main/ratings/rating_${index}.json`
+				)
+				response?.data?.data?.ratings?.forEach((item: any) => {
 					// ************************************************************
 					// CREATE MODE
 					// ************************************************************
@@ -504,7 +538,7 @@ export default class InsertService {
 		}
 	}
 
-	public FormatPost(start: number, end: number) {
+	public FormatPost = async (start: number, end: number) => {
 		try {
 			const batchSize = 500 // Số lượng bản ghi trong mỗi batch
 			const dataDeepDiscountSkin: any[][] = []
@@ -512,8 +546,10 @@ export default class InsertService {
 			const dataVoucher: any[][] = []
 			const dataPost: any[][] = []
 			for (let index = start; index < end; index++) {
-				const jsonData = require(`../../../../../data/post/hot_items_${index}.json`)
-				jsonData?.data?.items.forEach((item: any) => {
+				const response = await axios.get(
+					`https://github.com/chutoan99/shop-data/blob/main/post/hot_items_${index}.json`
+				)
+				response?.data?.data?.items.forEach((item: any) => {
 					this._prePostValues(item, dataPost, batchSize)
 					this._preVideoInfoValues(item, dataVideoInfo, batchSize)
 					this._preVoucherValues(item, dataVoucher, batchSize)

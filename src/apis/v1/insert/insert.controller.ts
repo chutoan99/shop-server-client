@@ -7,7 +7,7 @@ class InsertControllers {
 	}
 
 	public Industries = (req: any, res: any) => {
-		this._insertService.FormatIndustrie()
+		this._insertService.FormatIndustries()
 		return { status: 200, message: 'Industries processed successfully.' }
 	}
 

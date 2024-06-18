@@ -1,7 +1,7 @@
 import MESSAGE from '~/@core/contains/message.json'
 import TopProductRepository from './top-product.repository'
 import TopProduct from './top-product.entity'
-import { TopProductResponse } from './top-product.interface'
+import { TopProductResponse } from './top-product.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'

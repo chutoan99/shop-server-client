@@ -2,7 +2,7 @@ import MESSAGE from '~/@core/contains/message.json'
 import SearchHistoryRepository from './search-history.repository'
 import SearchHistory from './search-history.entity'
 import { Builder } from 'builder-pattern'
-import { SearchHistoryResponse } from './search-history.interface'
+import { SearchHistoryResponse } from './search-history.response'
 import { LoggerSystem } from '~/systems/logger'
 import { WriteResponse } from '~/systems/other/response.system'
 

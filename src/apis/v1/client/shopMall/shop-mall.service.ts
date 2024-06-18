@@ -4,7 +4,7 @@ import { formatShopMall } from './shop-mall.helper'
 import ShopMallRepository from './shop-mall.repository'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
-import { ShopMallResponse } from './shop-mall.interface'
+import { ShopMallResponse } from './shop-mall.response'
 import { LoggerSystem } from '~/systems/logger'
 export default class ShopMallService {
 	protected cacheKey: string = 'shop-mall'

@@ -1,7 +1,7 @@
 import MESSAGE from '~/@core/contains/message.json'
 import Banner from './banner.entity'
 import BannerRepository from './banner.repository'
-import { BannerResponse } from './banner.interface'
+import { BannerResponse } from './banner.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 import _ from 'lodash'

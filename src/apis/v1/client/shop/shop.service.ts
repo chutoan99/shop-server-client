@@ -3,7 +3,7 @@ import ShopRepository from './shop.repository'
 import Post from '../post/post.entity'
 import Shop from './shop.entity'
 import RedisSystem from '~/systems/redis/redis.system'
-import { ShopItemsResponse, ShopResponse } from './shop.interface'
+import { ShopItemsResponse, ShopResponse } from './shop.response'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'
 

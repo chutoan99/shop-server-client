@@ -2,7 +2,7 @@ import MESSAGE from '~/@core/contains/message.json'
 
 import FlashSale from './flash-sale.entity'
 import FlashSaleRepository from './flash-sale.repository'
-import { FlashSaleResponse } from './flash-sale.interface'
+import { FlashSaleResponse } from './flash-sale.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 export default class FlashSaleService {

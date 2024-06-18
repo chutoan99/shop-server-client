@@ -7,7 +7,7 @@ import UserRepository from '../user/user.repository'
 import User from '../user/user.entity'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { Builder } from 'builder-pattern'
-import CommentResponse from './comment.interface'
+import CommentResponse from './comment.response'
 import { LoggerSystem } from '~/systems/logger'
 import { WriteResponse } from '~/systems/other/response.system'
 export default class CommentService {

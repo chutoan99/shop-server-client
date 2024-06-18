@@ -5,7 +5,7 @@ import User from './user.entity'
 import CloudSystem from '~/systems/cloudinary/cloud.system'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
-import UserResponse from './user.inteface'
+import UserResponse from './user.response'
 import { WriteResponse } from '~/systems/other/response.system'
 export default class UserService {
 	private readonly _loggerSystem: LoggerSystem

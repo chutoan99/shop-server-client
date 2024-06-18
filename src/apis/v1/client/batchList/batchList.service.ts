@@ -2,7 +2,7 @@ import MESSAGE from '~/@core/contains/message.json'
 
 import BatchList from './batchList.entity'
 import BatchListRepository from './batchList.repository'
-import { BatchListResponse } from './batchList.interface'
+import { BatchListResponse } from './batchList.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'

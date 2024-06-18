@@ -8,7 +8,7 @@ import RedisSystem from '~/systems/redis/redis.system'
 import {
 	IndustryInterface,
 	SearchIndustryInterface
-} from './industry.interface'
+} from './industry.response'
 import { LoggerSystem } from '~/systems/logger'
 
 export default class IndustryService {

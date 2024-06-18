@@ -3,7 +3,7 @@ import SearchSuggestRepository from './search-suggest.repository'
 import SearchSuggest from './search-suggest.entity'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
-import { SearchSuggestResponse } from './search-suggest.interface'
+import { SearchSuggestResponse } from './search-suggest.response'
 import { LoggerSystem } from '~/systems/logger'
 
 export default class SearchSuggestService {

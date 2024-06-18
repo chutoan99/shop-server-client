@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import BannerService from './banner.service'
 import { internalServerError } from '~/@core/systems/handle_errors'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
-import { BannerResponse } from './banner.interface'
+import { BannerResponse } from './banner.response'
 
 class BannerController {
 	private readonly _bannerService: BannerService

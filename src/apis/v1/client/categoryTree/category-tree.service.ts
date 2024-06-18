@@ -8,7 +8,7 @@ import { LoggerSystem } from '~/systems/logger'
 import {
 	SearchCategoryResponse,
 	CategoryResponse
-} from './category-tree.interface'
+} from './category-tree.response'
 
 export default class CategoriesTreeService {
 	private readonly _loggerSystem: LoggerSystem

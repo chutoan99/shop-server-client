@@ -2,7 +2,7 @@ import MESSAGE from '~/@core/contains/message.json'
 
 import NotifyRepository from './notify.repository'
 import Notify from './notify.entity'
-import { NotifyResponse } from './notify.interface'
+import { NotifyResponse } from './notify.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 import _ from 'lodash'

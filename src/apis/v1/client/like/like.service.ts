@@ -4,7 +4,7 @@ import LikeRepository from './like.repository'
 import Like from './like.entity'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
-import LikeResponse from './like.interface'
+import LikeResponse from './like.response'
 import { LoggerSystem } from '~/systems/logger'
 import { WriteResponse } from '~/systems/other/response.system'
 export default class LikeService {

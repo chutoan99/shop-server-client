@@ -1,6 +1,6 @@
-import Category from './category-tree.entity'
+import { CategoryModel } from "./category-tree.model"
 
-export const formatCategory = (categoryTreeList: Category[]): Category[][] => {
+export const formatCategory = (categoryTreeList: CategoryModel[]): CategoryModel[][] => {
 	const categoryTreeArray = []
 	const lastIdx = categoryTreeList.length - 1
 
@@ -31,7 +31,7 @@ export const formatCategory = (categoryTreeList: Category[]): Category[][] => {
 		categoryTreeArray.push([categoryTreeList[lastIdx]])
 	}
 
-	return categoryTreeArray as Category[][]
+	return categoryTreeArray as CategoryModel[][]
 }
 
 const isEmptyObject = (obj: any) => {

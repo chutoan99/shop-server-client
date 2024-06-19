@@ -1,9 +1,9 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import TopProduct from './top-product.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import { LoggerSystem } from '~/systems/logger'
+import { TopProductModel } from './top-product.model'
 interface ITopProductRepository {
-	findAll(): Promise<TopProduct[]>
+	findAll(): Promise<TopProductModel[]>
 }
 
 export default class TopProductRepository implements ITopProductRepository {
@@ -16,12 +16,12 @@ export default class TopProductRepository implements ITopProductRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public findAll = async (): Promise<TopProduct[]> => {
+	public findAll = async (): Promise<TopProductModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, data_type, count, name, images, sort_type, best_price, display_text, createdAt, updatedAt FROM TopProducts`
 			)
-			return response as TopProduct[]
+			return response as TopProductModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

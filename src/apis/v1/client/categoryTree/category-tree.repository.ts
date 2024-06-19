@@ -1,11 +1,11 @@
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { BaseDataBase } from '~/systems/dataBase'
-import Category from './category-tree.entity'
 import { LoggerSystem } from '~/systems/logger'
+import { CategoryModel } from './category-tree.model'
 
 interface ICategoriesRepository {
-	findAll(level: number): Promise<Category[]>
-	search(catid: number): Promise<Category[]>
+	findAll(level: number): Promise<CategoryModel[]>
+	search(catid: number): Promise<CategoryModel[]>
 }
 export default class CategoriesRepository implements ICategoriesRepository {
 	private readonly _loggerSystem: LoggerSystem
@@ -15,13 +15,13 @@ export default class CategoriesRepository implements ICategoriesRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (level: number): Promise<Category[]> => {
+	public findAll = async (level: number): Promise<CategoryModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT * FROM HomeCategories WHERE level = ${level}`
 			)
 
-			return response as Category[]
+			return response as CategoryModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -30,13 +30,13 @@ export default class CategoriesRepository implements ICategoriesRepository {
 		}
 	}
 
-	public search = async (catid: number): Promise<Category[]> => {
+	public search = async (catid: number): Promise<CategoryModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT * FROM HomeCategories WHERE parent_catid = ${catid}`
 			)
 
-			return response as Category[]
+			return response as CategoryModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

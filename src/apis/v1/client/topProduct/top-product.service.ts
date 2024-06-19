@@ -1,10 +1,10 @@
 import MESSAGE from '~/@core/contains/message.json'
 import TopProductRepository from './top-product.repository'
-import TopProduct from './top-product.entity'
 import { TopProductResponse } from './top-product.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'
+import { TopProductModel } from './top-product.model'
 
 export default class TopProductService {
 	protected cacheKey: string = 'top-product'
@@ -30,7 +30,7 @@ export default class TopProductService {
 					response: cachedData
 				}
 			}
-			const response: TopProduct[] =
+			const response: TopProductModel[] =
 				await this._topProductRepository.findAll()
 
 			if (_.isArray(response)) {

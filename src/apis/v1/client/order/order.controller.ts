@@ -3,6 +3,7 @@ import OrderService from './order.service'
 import { internalServerError } from '~/@core/systems/handle_errors'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
 import OrderQueries from './order.queries'
+import { CreateOrderDto } from './order.dto'
 class OrderController {
 	private readonly _orderService: OrderService
 	constructor() {
@@ -42,8 +43,10 @@ class OrderController {
 		res: Response
 	): Promise<Response<any, Record<string, any>> | undefined> => {
 		try {
+			const payload: CreateOrderDto[] = req.body
+
 			const response = await this._orderService.create(
-				req.body,
+				payload,
 				+req.user.userid
 			)
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)

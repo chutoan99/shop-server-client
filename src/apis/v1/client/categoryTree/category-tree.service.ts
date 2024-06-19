@@ -1,5 +1,4 @@
 import MESSAGE from '~/@core/contains/message.json'
-import Category from './category-tree.entity'
 import CategoriesRepository from './category-tree.repository'
 import { formatCategory } from './category-tree.helper'
 import _ from 'lodash'
@@ -9,6 +8,7 @@ import {
 	SearchCategoryResponse,
 	CategoryResponse
 } from './category-tree.response'
+import { CategoryModel } from './category-tree.model'
 
 export default class CategoriesTreeService {
 	private readonly _loggerSystem: LoggerSystem
@@ -36,7 +36,7 @@ export default class CategoriesTreeService {
 				}
 			}
 
-			const response: Category[] =
+			const response: CategoryModel[] =
 				await this._categoriesRepository.findAll(level)
 
 			if (_.isArray(response)) {
@@ -71,7 +71,7 @@ export default class CategoriesTreeService {
 				}
 			}
 
-			const response: Category[] =
+			const response: CategoryModel[] =
 				await this._categoriesRepository.search(catid)
 
 			if (_.isArray(response)) {
@@ -83,7 +83,7 @@ export default class CategoriesTreeService {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
 				total: total,
-				response: response as Category[]
+				response: response as CategoryModel[]
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)

@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface TopProduct extends BaseModel {
+export  interface TopProductModel extends BaseModel {
 	id: number
 	data_type: string
 	count: number

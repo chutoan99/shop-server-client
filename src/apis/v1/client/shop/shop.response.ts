@@ -1,15 +1,12 @@
-import Post from '../post/post.entity'
-import Shop from './shop.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { PostModel } from '../post/post.model'
+import { ShopModel } from './shop.model'
 
-export interface ShopResponse {
-	err: number
-	msg: string
-	response: Shop
+export interface ShopResponse extends BaseResponse {
+	response: ShopModel
 }
 
-export interface ShopItemsResponse {
-	err: number
-	msg: string
+export interface ShopItemsResponse  extends BaseResponse {
 	total: number
-	response: Post[]
+	response: PostModel[]
 }

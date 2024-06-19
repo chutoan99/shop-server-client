@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface Shop extends BaseModel {
+export  interface ShopModel extends BaseModel {
 	id: number
 	userid: number
 	item_count: number

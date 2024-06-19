@@ -1,5 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
-export default interface User extends BaseModel {
+
+export interface UserModel extends BaseModel {
 	id: number
 	shopid: number
 	username: string

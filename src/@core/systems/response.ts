@@ -1,6 +1,6 @@
 import { FieldPacket, OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2'
 
-export type BaseResponse = [
+export type ResultResponse = [
 	(
 		| RowDataPacket[]
 		| RowDataPacket[][]
@@ -10,11 +10,3 @@ export type BaseResponse = [
 	),
 	FieldPacket[]
 ]
-
-export type CustomResponse =
-	| RowDataPacket[]
-	| RowDataPacket[][]
-	| OkPacket
-	| OkPacket[]
-	| ResultSetHeader
-	| [ResultSetHeader, FieldPacket[]]

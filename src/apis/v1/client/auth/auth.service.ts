@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import sendEmail from '~/middleWares/sendEmail'
 import templateResetPassword from '~/templates/reset'
 import { generateAccessToken, generateRefreshToken } from '~/middleWares/jwt'
-import User from '../user/user.entity'
 import MESSAGE from '~/@core/contains/message.json'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
@@ -14,8 +13,9 @@ import { generateShopId, generateUserId } from '~/helpers/generateId'
 import { ROLE } from '~/systems/other/role.interface'
 import AuthRepository from './auth.repository'
 import { ForgotPasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from './auth.dto'
-import { WriteResponse } from '~/systems/other/response.system'
+import { BaseResponse } from '~/systems/other/response.system'
 import { loginResponse } from './auth.response'
+import { UserModel } from '../user/user.model'
 import { LoggerSystem } from '~/systems/logger'
 export default class AuthService {
 	private readonly _loggerSystem: LoggerSystem
@@ -35,7 +35,7 @@ export default class AuthService {
 
 	//* B1: Kiểm tra email đã tồn tại hay chưa
 	//* B2: Tạo User
-	public Register = async (payload: RegisterDto): Promise<WriteResponse> => {
+	public Register = async (payload: RegisterDto): Promise<BaseResponse> => {
 		try {
 			const checkResult = await this._userService.checkExistUser(
 				payload.email
@@ -43,7 +43,7 @@ export default class AuthService {
 			if (checkResult) {
 				return checkResult
 			}
-			const user: User = Builder<User>()
+			const user: UserModel = Builder<UserModel>()
 				.id(generateUserId())
 				.shopid(generateShopId())
 				.email(payload?.email)
@@ -54,18 +54,19 @@ export default class AuthService {
 				.password(this.hashPassWord(payload?.password))
 				.build()
 
-			const created: boolean = await this._userRepository.createUser(user)
-			if (created) {
-				return {
-					err: 0,
-					msg: MESSAGE.REGISTER.SUCCESS
-				}
-			} else {
-				return {
+			const created: boolean = await this._userRepository.create(user)
+
+      if(!created){
+        return {
 					err: 1,
 					msg: MESSAGE.REGISTER.FAILED
 				}
-			}
+      }
+
+      return {
+        err: 0,
+        msg: MESSAGE.REGISTER.SUCCESS
+      }
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -75,9 +76,9 @@ export default class AuthService {
 	//* B1 KIỂM TRA MẬT KHẨU ĐÚNG HAY KHÔNG
 	//* B2 TẠO ACCESS_TOKEN (Xác thực người dùng, quân quyên người dùng) VÀ REFRESH_TOKEN()
 	//* B3 LƯU REFRESH_TOKEN VÀO DB VÀ COOKIE
-	public Login = async (payload: LoginDto) : Promise<loginResponse | WriteResponse>=> {
+	public Login = async (payload: LoginDto) : Promise<loginResponse | BaseResponse>=> {
 		try {
-			const user: User = await this._userRepository.findUser(
+			const user: UserModel = await this._userRepository.findByEmail(
 				payload?.email
 			)
 			if (!user) {
@@ -134,7 +135,7 @@ export default class AuthService {
 	//* B6: Change password
 	public ForgotPassword = async (payload: ForgotPasswordDto) => {
 		try {
-			const user: User = await this._userRepository.findUser(
+			const user: UserModel = await this._userRepository.findByEmail(
 				payload?.email
 			)
 			if (!user) {
@@ -177,7 +178,7 @@ export default class AuthService {
 	//* B2: Kiểm tra thời gian lưu trong db và thời gian thực xem tojen có hết hạn hay chưa
 	public ResetPassword = async (payload: ResetPasswordDto) => {
 		try {
-			const user: User = await this._userRepository.findUser(
+			const user: UserModel = await this._userRepository.findByEmail(
 				payload?.email
 			)
 			if (!user) {
@@ -206,17 +207,17 @@ export default class AuthService {
 				newPassword
 			)
 
-			if (idUpdated) {
-				return {
-					err: 0,
-					msg: MESSAGE.USER.UPDATED_PASSWORD_SUCCESS
-				}
-			} else {
-				return {
+      if(!idUpdated){
+        return {
 					err: 2,
 					msg: MESSAGE.EMAIL.WRONG_CREDENTIALS
 				}
-			}
+      }
+
+			return {
+        err: 0,
+        msg: MESSAGE.USER.UPDATED_PASSWORD_SUCCESS
+      }
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -231,7 +232,7 @@ export default class AuthService {
 			process.env.SECRET_KEY as jwt.Secret
 		) as JwtPayload
 
-		const user: User =
+		const user: UserModel =
 			await this._authRepository.findUserRefreshAccessToken(
 				decode?.userid,
 				cookie.refreshToken

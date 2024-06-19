@@ -1,8 +1,7 @@
-import Like from './like.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { LikeModel } from './like.model'
 
-export default interface LikeResponse {
-	err: number
-	msg: string
+export default interface LikeResponse extends BaseResponse {
 	total: number
-	response: Like[]
+	response: LikeModel[]
 }

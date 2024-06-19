@@ -1,9 +1,9 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import Notify from './notify.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import { LoggerSystem } from '~/systems/logger'
+import { NotifyModel } from './notify.model'
 interface INotifyRepository {
-	findAll(): Promise<Notify[]>
+	findAll(): Promise<NotifyModel[]>
 }
 
 export default class NotifyRepository implements INotifyRepository {
@@ -14,13 +14,13 @@ export default class NotifyRepository implements INotifyRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (): Promise<Notify[]> => {
+	public findAll = async (): Promise<NotifyModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, image, title, content, userid, seen , time, createdAt, updatedAt  FROM Notifications`
 			)
 
-			return response as Notify[]
+			return response as NotifyModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

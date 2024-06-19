@@ -1,11 +1,11 @@
 import MESSAGE from '~/@core/contains/message.json'
-import ShopMall from './shop-mall.entity'
 import { formatShopMall } from './shop-mall.helper'
 import ShopMallRepository from './shop-mall.repository'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { ShopMallResponse } from './shop-mall.response'
 import { LoggerSystem } from '~/systems/logger'
+import { ShopMallModel } from './shop-mall.model'
 export default class ShopMallService {
 	protected cacheKey: string = 'shop-mall'
 	private readonly _redisSystem: RedisSystem
@@ -30,7 +30,7 @@ export default class ShopMallService {
 					response: formatShopMall(cachedData)
 				}
 			}
-			const response: ShopMall[] | [] =
+			const response: ShopMallModel[] | [] =
 				await this._shopMallRepository.findAll()
 
 			if (_.isArray(response)) {

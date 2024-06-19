@@ -1,8 +1,7 @@
-import ShopMall from './shop-mall.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { ShopMallModel } from './shop-mall.model'
 
-export interface ShopMallResponse {
-	err: number
-	msg: string
+export interface ShopMallResponse extends BaseResponse {
 	total: number
-	response: ShopMall[][]
+	response: ShopMallModel[][]
 }

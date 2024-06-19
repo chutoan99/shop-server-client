@@ -1,9 +1,9 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import FlashSale from './flash-sale.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import { LoggerSystem } from '~/systems/logger'
+import { FlashSaleModel } from './flash-sale.model'
 interface IFlashSaleRepository {
-	findAll(): Promise<FlashSale[]>
+	findAll(): Promise<FlashSaleModel[]>
 }
 export default class FlashSaleRepository implements IFlashSaleRepository {
 	private readonly _loggerSystem: LoggerSystem
@@ -13,9 +13,9 @@ export default class FlashSaleRepository implements IFlashSaleRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (): Promise<FlashSale[]> => {
+	public findAll = async (): Promise<FlashSaleModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT 
 					id,
 					shopid,
@@ -39,7 +39,7 @@ export default class FlashSaleRepository implements IFlashSaleRepository {
 					FlashSales
 			`)
 
-			return response as FlashSale[]
+			return response as FlashSaleModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

@@ -1,7 +1,6 @@
-import User from './user.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import  { UserModel } from './user.model'
 
-export default interface UserResponse {
-	err: number
-	msg: string
-	response: User
+export default interface UserResponse extends BaseResponse {
+	response: UserModel
 }

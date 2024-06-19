@@ -1,8 +1,7 @@
-import SearchSuggest from './search-suggest.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { SearchSuggestModel } from './search-suggest.model'
 
-export interface SearchSuggestResponse {
-	err: number
-	msg: string
+export interface SearchSuggestResponse extends BaseResponse {
 	total: number
-	response: SearchSuggest[]
+	response: SearchSuggestModel[]
 }

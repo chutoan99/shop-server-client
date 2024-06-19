@@ -1,11 +1,11 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import Post from '../post/post.entity'
-import Shop from './shop.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import { LoggerSystem } from '~/systems/logger'
+import { ShopModel } from './shop.model'
+import { PostModel } from '../post/post.model'
 interface IShopRepository {
-	findItems(shopid: number): Promise<Post[]>
-	find(shopid: number): Promise<Shop>
+	findItems(shopid: number): Promise<PostModel[]>
+	find(shopid: number): Promise<ShopModel>
 }
 
 export default class ShopRepository implements IShopRepository {
@@ -17,13 +17,13 @@ export default class ShopRepository implements IShopRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findItems = async (shopid: number): Promise<Post[]> => {
+	public findItems = async (shopid: number): Promise<PostModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT Posts.* FROM Shops LEFT JOIN Posts ON Shops.id = Posts.shopid WHERE Shops.id = ${shopid}`
 			)
 
-			return response as Post[]
+			return response as PostModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -32,9 +32,9 @@ export default class ShopRepository implements IShopRepository {
 		}
 	}
 
-	public find = async (shopid: number): Promise<Shop> => {
+	public find = async (shopid: number): Promise<ShopModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT 
 					id,  
 					userid, 
@@ -64,7 +64,7 @@ export default class ShopRepository implements IShopRepository {
 				WHERE id = ${shopid} LIMIT 1
 			`)
 
-			return (response as Shop[])[0]
+			return (response as ShopModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

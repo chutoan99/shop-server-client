@@ -1,10 +1,10 @@
 import MESSAGE from '~/@core/contains/message.json'
 
-import FlashSale from './flash-sale.entity'
 import FlashSaleRepository from './flash-sale.repository'
 import { FlashSaleResponse } from './flash-sale.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
+import { FlashSaleModel } from './flash-sale.model'
 export default class FlashSaleService {
 	protected cacheKey: string = 'flash-sale'
 	private readonly _loggerSystem: LoggerSystem
@@ -31,7 +31,7 @@ export default class FlashSaleService {
 				}
 			}
 
-			const response: FlashSale[] =
+			const response: FlashSaleModel[] =
 				await this._flashSaleRepository.findAll()
 			if (Array.isArray(response)) {
 				total = response.length

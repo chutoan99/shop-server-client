@@ -1,11 +1,11 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import SearchHistory from './search-history.entity'
+import {SearchHistoryModel} from './search-history.model'
 import { LoggerSystem } from '~/systems/logger'
 interface ISearchHistoryRepository {
-	findAll(userid: number): Promise<SearchHistory[]>
-	create(search: SearchHistory): Promise<boolean>
+	findAll(userid: number): Promise<SearchHistoryModel[]>
+	create(search: SearchHistoryModel): Promise<boolean>
 }
 
 export default class SearchHistoryRepository
@@ -18,13 +18,13 @@ export default class SearchHistoryRepository
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<SearchHistory[]> => {
+	public findAll = async (userid: number): Promise<SearchHistoryModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, userid, text, createdAt, updatedAt  FROM SearchHistories WHERE userid = ${userid} ORDER BY createdAt DESC LIMIT 10`
 			)
 
-			return response as SearchHistory[]
+			return response as SearchHistoryModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -33,7 +33,7 @@ export default class SearchHistoryRepository
 		}
 	}
 
-	public create = async (search: SearchHistory): Promise<boolean> => {
+	public create = async (search: SearchHistoryModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(

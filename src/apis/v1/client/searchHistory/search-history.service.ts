@@ -1,15 +1,16 @@
 import MESSAGE from '~/@core/contains/message.json'
 import SearchHistoryRepository from './search-history.repository'
-import SearchHistory from './search-history.entity'
 import { Builder } from 'builder-pattern'
 import { SearchHistoryResponse } from './search-history.response'
 import { LoggerSystem } from '~/systems/logger'
-import { WriteResponse } from '~/systems/other/response.system'
+import { BaseResponse } from '~/systems/other/response.system'
+import { SearchHistoryModel } from './search-history.model'
+import { CreateSearchHistoryDto } from './search-history.dto'
 
 export default class SearchHistoryService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _searchHistoryRepository: SearchHistoryRepository
-  
+
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._searchHistoryRepository = new SearchHistoryRepository()
@@ -17,7 +18,7 @@ export default class SearchHistoryService {
 
 	public FindAll = async (userid: number): Promise<SearchHistoryResponse> => {
 		try {
-			const response: SearchHistory[] =
+			const response: SearchHistoryModel[] =
 				await this._searchHistoryRepository.findAll(userid)
 
 			let total = 0
@@ -39,27 +40,27 @@ export default class SearchHistoryService {
 	}
 
 	public Create = async (
-		payload: SearchHistory,
+		payload: CreateSearchHistoryDto,
 		userid: number
-	): Promise<WriteResponse> => {
+	): Promise<BaseResponse> => {
 		try {
-			const newSearch = Builder<SearchHistory>()
+			const newSearch = Builder<SearchHistoryModel>()
 				.userid(userid)
 				.text(payload.text)
 				.build()
 
 			const isCreated: boolean =
 				await this._searchHistoryRepository.create(newSearch)
-			if (isCreated) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
+
+			if (!isCreated) {
 				return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.CREATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)

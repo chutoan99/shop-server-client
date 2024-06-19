@@ -1,9 +1,9 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import SearchSuggest from './search-suggest.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import { LoggerSystem } from '~/systems/logger'
+import { SearchSuggestModel } from './search-suggest.model'
 interface ISearchSuggestRepository {
-	findAll(): Promise<SearchSuggest[]>
+	findAll(): Promise<SearchSuggestModel[]>
 }
 export default class SearchSuggestRepository
 	implements ISearchSuggestRepository
@@ -16,13 +16,13 @@ export default class SearchSuggestRepository
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (): Promise<SearchSuggest[]> => {
+	public findAll = async (): Promise<SearchSuggestModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, text, count, createdAt, updatedAt  FROM SearchSuggestions`
 			)
 
-			return response as SearchSuggest[]
+			return response as SearchSuggestModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

@@ -1,8 +1,7 @@
-import Room from './room.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { RoomModel } from './room.model'
 
-export interface RoomResponse {
-	err: number
-	msg: string
+export interface RoomResponse extends BaseResponse {
 	total: number
-	response: Room[]
+	response: RoomModel[]
 }

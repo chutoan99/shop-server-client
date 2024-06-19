@@ -1,12 +1,13 @@
 import MESSAGE from '~/@core/contains/message.json'
 import { generateLikeId } from '~/helpers/generateId'
 import LikeRepository from './like.repository'
-import Like from './like.entity'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
 import LikeResponse from './like.response'
+import { BaseResponse } from '~/systems/other/response.system'
+import { LikeModel } from './like.model'
 import { LoggerSystem } from '~/systems/logger'
-import { WriteResponse } from '~/systems/other/response.system'
+import { CreateLikeDto } from './like.dto'
 export default class LikeService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _likeRepository: LikeRepository
@@ -18,7 +19,9 @@ export default class LikeService {
 	public FindAll = async (userid: number): Promise<LikeResponse> => {
 		try {
 			let total = 0
-			const response: Like[] = await this._likeRepository.findAll(userid)
+			const response: LikeModel[] = await this._likeRepository.findAll(
+				userid
+			)
 
 			if (_.isArray(response)) {
 				total = response.length
@@ -36,15 +39,16 @@ export default class LikeService {
 	}
 
 	public Create = async (
-		payload: Like,
+		payload: CreateLikeDto,
 		userid: number
-	): Promise<WriteResponse> => {
+	): Promise<BaseResponse> => {
 		try {
 			const checkResult = await this.checkExistLike(payload.itemid)
+
 			if (checkResult) {
 				return checkResult
 			}
-			const newLike: Like = Builder<Like>()
+			const newLike: LikeModel = Builder<LikeModel>()
 				.id(generateLikeId())
 				.userid(userid)
 				.itemid(payload.itemid)
@@ -54,16 +58,15 @@ export default class LikeService {
 			const isCreated: boolean = await this._likeRepository.create(
 				newLike
 			)
-			if (isCreated) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
+			if (!isCreated) {
 				return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.CREATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
@@ -71,19 +74,19 @@ export default class LikeService {
 		}
 	}
 
-	public Delete = async (id: number): Promise<WriteResponse> => {
+	public Delete = async (id: number): Promise<BaseResponse> => {
 		try {
 			const isDeleted: boolean = await this._likeRepository.delete(id)
-			if (isDeleted) {
-				return {
-					err: 0,
-					msg: MESSAGE.DELETE.SUCCESS
-				}
-			} else {
+
+			if (!isDeleted) {
 				return {
 					err: 1,
 					msg: MESSAGE.DELETE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.DELETE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
@@ -92,7 +95,7 @@ export default class LikeService {
 	}
 
 	public checkExistLike = async (id: number) => {
-		const existingRoom: Like = await this._likeRepository.find(id)
+		const existingRoom: LikeModel = await this._likeRepository.find(id)
 		if (existingRoom) {
 			return {
 				err: 1,

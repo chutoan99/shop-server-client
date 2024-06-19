@@ -1,4 +1,4 @@
-export interface WriteResponse {
+export interface BaseResponse {
 	err: number
 	msg: string
 }

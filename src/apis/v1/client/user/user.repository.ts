@@ -1,14 +1,14 @@
 import { LoggerSystem } from '~/systems/logger'
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import User from './user.entity'
+import {UserModel} from './user.model'
 
 interface IUserRepository {
-	findUser(email: string): Promise<User>
-	currentUser(userid: number): Promise<User>
-	createUser(user: User): Promise<boolean>
-	updateUser(user: User): Promise<boolean>
+	findByEmail(email: string): Promise<UserModel>
+	current(userid: number): Promise<UserModel>
+	create(user: UserModel): Promise<boolean>
+	update(user: UserModel): Promise<boolean>
 }
 
 export default class UserRepository implements IUserRepository {
@@ -21,13 +21,13 @@ export default class UserRepository implements IUserRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public findUser = async (email: string): Promise<User> => {
+	public findByEmail = async (email: string): Promise<UserModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT * FROM Users WHERE email = '${email}'`
 			)
 
-			return (response as User[])[0]
+			return (response as UserModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -36,9 +36,9 @@ export default class UserRepository implements IUserRepository {
 		}
 	}
 
-	public currentUser = async (userid: number): Promise<User> => {
+	public current = async (userid: number): Promise<UserModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT 
 					id, 
 					shopid, 
@@ -58,7 +58,7 @@ export default class UserRepository implements IUserRepository {
 				FROM Users WHERE id = ${userid} Limit 1`
 			)
 
-			return (response as User[])[0]
+			return (response as UserModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -67,7 +67,7 @@ export default class UserRepository implements IUserRepository {
 		}
 	}
 
-	public createUser = async (user: User): Promise<boolean> => {
+	public create = async (user: UserModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] = await this
 				._baseDataBase.db.execute(`
@@ -86,7 +86,7 @@ export default class UserRepository implements IUserRepository {
 		}
 	}
 
-	public updateUser = async (user: User): Promise<boolean> => {
+	public update = async (user: UserModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] = await this
 				._baseDataBase.db.query(`

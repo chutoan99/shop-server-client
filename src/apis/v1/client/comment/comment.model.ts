@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface Comment extends BaseModel {
+export interface CommentModel extends BaseModel {
 	id: number
 	parent_cmtid: number | null
 	userid: number

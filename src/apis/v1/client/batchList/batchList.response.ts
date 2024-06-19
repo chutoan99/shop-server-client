@@ -1,8 +1,7 @@
-import BatchList from './batchList.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { BatchListModel } from './batchList.model'
 
-export interface BatchListResponse {
-	err: number
-	msg: string
+export interface BatchListResponse  extends BaseResponse {
 	total: number
-	response: BatchList[]
+	response: BatchListModel[]
 }

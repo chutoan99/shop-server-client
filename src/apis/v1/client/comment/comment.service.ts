@@ -1,15 +1,16 @@
 import { generateCmtId } from '~/helpers/generateId'
-import Comment from './comment.entity'
 import MESSAGE from '~/@core/contains/message.json'
 import CommentQuery from './comment.query'
 import CommentRepository from './comment.repository'
 import UserRepository from '../user/user.repository'
-import User from '../user/user.entity'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { Builder } from 'builder-pattern'
 import CommentResponse from './comment.response'
+import { BaseResponse } from '~/systems/other/response.system'
+import { UserModel } from '../user/user.model'
+import { CommentModel } from './comment.model'
+import { CreateCommentDto } from './comment.dto'
 import { LoggerSystem } from '~/systems/logger'
-import { WriteResponse } from '~/systems/other/response.system'
 export default class CommentService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _userRepository: UserRepository
@@ -24,9 +25,8 @@ export default class CommentService {
 		try {
 			const pagination = new PaginationSystem(queries.limit, queries.page)
 
-			const response: Comment[] = await this._commentRepository.findAll(
-				pagination
-			)
+			const response: CommentModel[] =
+				await this._commentRepository.findAll(pagination)
 
 			pagination.setTotal(response)
 
@@ -48,10 +48,10 @@ export default class CommentService {
 
 	public Create = async (
 		userid: number,
-		payload: Comment
-	): Promise<WriteResponse> => {
+		payload: CreateCommentDto
+	): Promise<BaseResponse> => {
 		try {
-			const user: User = await this._userRepository.currentUser(userid)
+			const user: UserModel = await this._userRepository.current(userid)
 			if (!user) {
 				return {
 					err: 2,
@@ -59,7 +59,7 @@ export default class CommentService {
 				}
 			}
 
-			const comment: Comment = Builder<Comment>()
+			const comment: CommentModel = Builder<CommentModel>()
 				.id(generateCmtId())
 				.orderid(payload?.orderid)
 				.itemid(payload?.itemid)
@@ -81,16 +81,17 @@ export default class CommentService {
 			const isCreated: boolean = await this._commentRepository.create(
 				comment
 			)
-			if (isCreated) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
+
+			if (!isCreated) {
 				return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
+			}
+
+			return {
+				err: 0,
+				msg: MESSAGE.CREATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)

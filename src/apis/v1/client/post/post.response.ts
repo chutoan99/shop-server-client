@@ -1,18 +1,15 @@
-import Post from './post.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { PostModel } from './post.model'
 
-export interface PostResponse {
-	err: number
-	msg: string
+export interface PostResponse extends BaseResponse {
 	offset: number
 	limit: number
 	total: number
 	totalPage: number
 	currentPage: number
-	response: Post[]
+	response: PostModel[]
 }
 
-export interface PostIdResponse {
-	err: number
-	msg: string
-	response: Post
+export interface PostIdResponse extends BaseResponse {
+	response: PostModel
 }

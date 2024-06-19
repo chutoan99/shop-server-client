@@ -1,30 +1,30 @@
 import { Builder } from 'builder-pattern'
 import bcrypt from 'bcrypt'
 import { formatDate } from '~/helpers/date'
-import Shop from '../client/shop/shop.entity'
-import User from '../client/user/user.entity'
-import { ROLE } from '~/systems/other/role.interface'
-import FlashSale from '../client/flashSale/flash-sale.entity'
-import Post from '../client/post/post.entity'
-import Category from '../client/categoryTree/category-tree.entity'
-import ShopMall from '../client/shopMall/shop-mall.entity'
-import SearchSuggest from '../client/searchSuggest/search-suggest.entity'
-import Notify from '../client/notify/notify.entity'
-import { DeepDiscountSkin, Video, Voucher } from './insert.entity'
-import Industry from '../client/industry/industry.entity'
-import Banner from '../client/banner/banner.entity'
-import BatchList from '../client/batchList/batchList.entity'
-import TopProduct from '../client/topProduct/top-product.entity'
-import Comment from '../client/comment/comment.entity'
 import _ from 'lodash'
+import { CategoryModel } from '../client/categoryTree/category-tree.model'
+import { ShopModel } from '../client/shop/shop.model'
+import { UserModel } from '../client/user/user.model'
+import { ROLE } from '~/systems/other/role.interface'
+import { FlashSaleModel } from '../client/flashSale/flash-sale.model'
+import { PostModel } from '../client/post/post.model'
+import { ShopMallModel } from '../client/shopMall/shop-mall.model'
+import { SearchSuggestModel } from '../client/searchSuggest/search-suggest.model'
+import { NotifyModel } from '../client/notify/notify.model'
+import { DeepDiscountSkinModel, VideoModel, VoucherModel } from './insert.model'
+import { IndustryModel } from '../client/industry/industry.model'
+import { BannerModel } from '../client/banner/banner.model'
+import { BatchListModel } from '../client/batchList/batchList.model'
+import { TopProductModel } from '../client/topProduct/top-product.model'
+import { CommentModel } from '../client/comment/comment.model'
 export default class InsertHelper {
 	public hashPassWord = (password: string) => {
 		const result = bcrypt.hashSync(password, bcrypt.genSaltSync(12))
 		return result
 	}
 
-	public processDataCategory = (item: any): Category => {
-		return Builder<Category>()
+	public processDataCategory = (item: any): CategoryModel => {
+		return Builder<CategoryModel>()
 			.id(item.catid)
 			.parent_catid(item.parent_catid)
 			.name(item.name)
@@ -38,8 +38,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataShop = (jsonData: any): Shop => {
-		return Builder<Shop>()
+	public processDataShop = (jsonData: any): ShopModel => {
+		return Builder<ShopModel>()
 			.id(jsonData?.data?.shopid)
 			.userid(jsonData?.data?.userid)
 			.portrait(
@@ -74,13 +74,13 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataUser = (jsonData: any): User => {
+	public processDataUser = (jsonData: any): UserModel => {
 		const sex = 0
 		const img_men =
 			'https://imgs.search.brave.com/NMbKJRcDath4I02VHl0t8tYf4UJSAmftuegWj3ZCbYs/rs:fit:640:403:1/g:ce/aHR0cDovL3d3dy5i/aXRyZWJlbHMuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDEx/LzA0L0ZhY2Vib29r/LU5ldy1EZWZhdWx0/LUF2YXRhci1QaWN0/dXJlLTcuanBn'
 		const img_women =
 			'https://imgs.search.brave.com/GgQ8DyHg0f1QxTAoZOmh4fYbylAOXHK903G1j_P_EaE/rs:fit:640:403:1/g:ce/aHR0cDovL3d3dy5i/aXRyZWJlbHMuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDEx/LzA0L0ZhY2Vib29r/LU5ldy1EZWZhdWx0/LUF2YXRhci1QaWN0/dXJlLTQuanBn'
-		return Builder<User>()
+		return Builder<UserModel>()
 			.id(jsonData?.data?.userid)
 			.shopid(jsonData?.data?.shopid)
 			.name(jsonData?.data?.name)
@@ -99,8 +99,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataFlashSale = (item: any): FlashSale => {
-		return Builder<FlashSale>()
+	public processDataFlashSale = (item: any): FlashSaleModel => {
+		return Builder<FlashSaleModel>()
 			.id(item.itemid)
 			.shopid(item.shopid)
 			.catid(item.catid)
@@ -125,8 +125,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataPost = (item: any): Post => {
-		return Builder<Post>()
+	public processDataPost = (item: any): PostModel => {
+		return Builder<PostModel>()
 			.id(item?.itemid)
 			.shopid(item?.shopid)
 			.currency(item?.currency)
@@ -220,8 +220,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataShopMall = (item: any): ShopMall => {
-		return Builder<ShopMall>()
+	public processDataShopMall = (item: any): ShopMallModel => {
+		return Builder<ShopMallModel>()
 			.id(item?.shopid)
 			.url(item?.url)
 			.image(
@@ -231,15 +231,15 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataSearchSuggest = (item: any): SearchSuggest => {
-		return Builder<SearchSuggest>()
+	public processDataSearchSuggest = (item: any): SearchSuggestModel => {
+		return Builder<SearchSuggestModel>()
 			.text(item?.text)
 			.count(item?.count)
 			.build()
 	}
 
-	public processDataNotify = (item: any): Notify => {
-		return Builder<Notify>()
+	public processDataNotify = (item: any): NotifyModel => {
+		return Builder<NotifyModel>()
 			.userid(item?.userid)
 			.seen(item?.seen)
 			.image(item?.image)
@@ -249,8 +249,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataVoucher = (item: any): Voucher => {
-		return Builder<Voucher>()
+	public processDataVoucher = (item: any): VoucherModel => {
+		return Builder<VoucherModel>()
 			.id(item?.voucher_info?.promotion_id)
 			.voucher_code(item?.voucher_info?.voucher_code)
 			.label(item?.voucher_info?.voucher_code)
@@ -259,8 +259,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataVideo = (item: any): Video => {
-		return Builder<Video>()
+	public processDataVideo = (item: any): VideoModel => {
+		return Builder<VideoModel>()
 			.id(item?.video_info_list[0]?.video_id)
 			.thumb_url(item?.video_info_list[0]?.thumb_url)
 			.duration(item?.video_info_list[0]?.duration)
@@ -275,8 +275,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataDeepDiscountSkin = (item: any): DeepDiscountSkin => {
-		return Builder<DeepDiscountSkin>()
+	public processDataDeepDiscountSkin = (item: any): DeepDiscountSkinModel => {
+		return Builder<DeepDiscountSkinModel>()
 			.id(item?.itemid)
 			.promotion_price(
 				item?.deep_discount_skin?.skin_data?.promo_label
@@ -301,8 +301,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataIndustry = (item: any, level: number): Industry => {
-		return Builder<Industry>()
+	public processDataIndustry = (item: any, level: number): IndustryModel => {
+		return Builder<IndustryModel>()
 			.id(item.path[level].category_id)
 			.parent_catid(level === 0 ? null : item.path[level - 1].category_id)
 			.level(level)
@@ -312,12 +312,12 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataBanner = (item: any): Banner => {
-		return Builder<Banner>().image_url(item?.image_url).build()
+	public processDataBanner = (item: any): BannerModel => {
+		return Builder<BannerModel>().image_url(item?.image_url).build()
 	}
 
-	public processDataBatchList = (item: any): BatchList => {
-		return Builder<BatchList>()
+	public processDataBatchList = (item: any): BatchListModel => {
+		return Builder<BatchListModel>()
 			.banner_image(item?.banner_image)
 			.title(JSON.parse(item.navigate_params.navbar.title).default)
 			.end(formatDate(item?.end))
@@ -325,8 +325,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataTopProduct = (item: any): TopProduct => {
-		return Builder<TopProduct>()
+	public processDataTopProduct = (item: any): TopProductModel => {
+		return Builder<TopProductModel>()
 			.data_type(item?.data_type)
 			.count(item?.count)
 			.name(item?.name)
@@ -343,8 +343,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataComment = (item: any): Comment => {
-		return Builder<Comment>()
+	public processDataComment = (item: any): CommentModel => {
+		return Builder<CommentModel>()
 			.id(item.cmtid)
 			.orderid(item?.orderid)
 			.itemid(item?.itemid)
@@ -388,8 +388,8 @@ export default class InsertHelper {
 			.build()
 	}
 
-	public processDataRatingReply = (item: any): Comment => {
-		return Builder<Comment>()
+	public processDataRatingReply = (item: any): CommentModel => {
+		return Builder<CommentModel>()
 			.id(item.cmtid + item?.userid)
 			.orderid(item?.orderid)
 			.itemid(item?.itemid)

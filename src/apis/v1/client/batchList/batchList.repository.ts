@@ -1,9 +1,9 @@
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { BaseDataBase } from '~/systems/dataBase'
-import BatchList from './batchList.entity'
 import { LoggerSystem } from '~/systems/logger'
+import { BatchListModel } from './batchList.model'
 interface IBatchListRepository {
-	findAll(): Promise<BatchList[]>
+	findAll(): Promise<BatchListModel[]>
 }
 
 export default class BatchListRepository implements IBatchListRepository {
@@ -15,12 +15,12 @@ export default class BatchListRepository implements IBatchListRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (): Promise<BatchList[]> => {
+	public findAll = async (): Promise<BatchListModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, banner_image, title, end, start, createdAt, updatedAt FROM BatchLists`
 			)
-			return response as BatchList[]
+			return response as BatchListModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

@@ -1,14 +1,14 @@
 import { BaseDataBase } from '~/systems/dataBase'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import { BaseResponse } from '~/@core/systems/response'
-import Order from './order.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import OrderQueries from './order.queries'
 import { LoggerSystem } from '~/systems/logger'
+import { OrderModel } from './order.model'
 interface IOrderRepository {
-	search(userid: number, payload: OrderQueries): Promise<Order[]>
+	search(userid: number, payload: OrderQueries): Promise<OrderModel[]>
 	getTab(userid: number): Promise<any[]>
-	find(orderid: number): Promise<Order>
-	create(order: Order): Promise<boolean>
+	find(orderid: number): Promise<OrderModel>
+	create(order: OrderModel): Promise<boolean>
 }
 
 export default class OrderRepository implements IOrderRepository {
@@ -23,9 +23,9 @@ export default class OrderRepository implements IOrderRepository {
 	public search = async (
 		userid: number,
 		payload: OrderQueries
-	): Promise<Order[] | []> => {
+	): Promise<OrderModel[] | []> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
             SELECT
                 Orders.id,
                 Orders.shop_name,
@@ -98,7 +98,7 @@ export default class OrderRepository implements IOrderRepository {
                 Orders.id;
       `)
 
-			return response as Order[]
+			return response as OrderModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -109,7 +109,7 @@ export default class OrderRepository implements IOrderRepository {
 
 	public getTab = async (userid: number): Promise<any[] | []> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
           SELECT
             JSON_OBJECT(
               'is_all',
@@ -152,9 +152,9 @@ export default class OrderRepository implements IOrderRepository {
 		}
 	}
 
-	public find = async (orderid: number): Promise<Order> => {
+	public find = async (orderid: number): Promise<OrderModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
             SELECT
                 Orders.id,
                 Orders.shop_name,
@@ -225,7 +225,7 @@ export default class OrderRepository implements IOrderRepository {
                 Orders.id;
       `)
 
-			return (response as Order[])[0]
+			return (response as OrderModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -234,7 +234,7 @@ export default class OrderRepository implements IOrderRepository {
 		}
 	}
 
-	public create = async (order: Order): Promise<boolean> => {
+	public create = async (order: OrderModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(

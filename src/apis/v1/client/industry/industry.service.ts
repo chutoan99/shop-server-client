@@ -1,4 +1,3 @@
-import Industry from './industry.entity'
 import MESSAGE from '~/@core/contains/message.json'
 import IndustryQuery from './industry.query'
 import IndustryRepository from './industry.repository'
@@ -10,6 +9,7 @@ import {
 	SearchIndustryInterface
 } from './industry.response'
 import { LoggerSystem } from '~/systems/logger'
+import { IndustryModel } from './industry.model'
 
 export default class IndustryService {
 	private readonly _redisSystem: RedisSystem
@@ -34,7 +34,7 @@ export default class IndustryService {
 					response: cachedData
 				}
 			}
-			const response: Industry[] =
+			const response: IndustryModel[] =
 				await this._industryRepository.findAll()
 			if (_.isArray(response)) {
 				total = response.length
@@ -58,7 +58,7 @@ export default class IndustryService {
 		try {
 			const pagination = new PaginationSystem(queries.limit, queries.page)
 
-			const response: Industry[] = await this._industryRepository.search(
+			const response: IndustryModel[] = await this._industryRepository.search(
 				pagination,
 				queries
 			)

@@ -1,15 +1,15 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import Cart from './cart.entity'
 import { LoggerSystem } from '~/systems/logger'
+import { CartModel } from './cart.model'
 interface ICartRepository {
-	findAll(userid: number): Promise<Cart[]>
-	find(cart: Cart, userid: number): Promise<Cart>
-	create(cart: Cart): Promise<boolean>
-	update(cartid: number, cart: Cart): Promise<boolean>
+	findAll(userid: number): Promise<CartModel[]>
+	find(cart: CartModel, userid: number): Promise<CartModel>
+	create(cart: CartModel): Promise<boolean>
+	update(cartid: number, cart: CartModel): Promise<boolean>
 	updateAmount(
-		cart: Cart,
+		cart: CartModel,
 		userid: number,
 		newAmount: number
 	): Promise<boolean>
@@ -25,9 +25,9 @@ export default class CartRepository implements ICartRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<Cart[]> => {
+	public findAll = async (userid: number): Promise<CartModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 					SELECT
 						Carts.*,
 					CASE
@@ -73,7 +73,7 @@ export default class CartRepository implements ICartRepository {
 						Posts.price_min, Posts.price, Posts.price_max, Posts.price_max_before_discount, Posts.name_tierVariations;
         		`)
 
-			return response as Cart[]
+			return response as CartModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -82,9 +82,9 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public find = async (cart: Cart, userid: number): Promise<Cart> => {
+	public find = async (cart: CartModel, userid: number): Promise<CartModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT  
 					* from Carts 
 				WHERE 
@@ -95,7 +95,7 @@ export default class CartRepository implements ICartRepository {
 				LIMIT 1
 			`)
 
-			return (response as Cart[])[0]
+			return (response as CartModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -104,7 +104,7 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public create = async (cart: Cart): Promise<boolean> => {
+	public create = async (cart: CartModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(
@@ -129,7 +129,7 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public update = async (cartid: number, cart: Cart): Promise<boolean> => {
+	public update = async (cartid: number, cart: CartModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(
@@ -146,7 +146,7 @@ export default class CartRepository implements ICartRepository {
 	}
 
 	public updateAmount = async (
-		cart: Cart,
+		cart: CartModel,
 		userid: number,
 		newAmount: number
 	): Promise<boolean> => {

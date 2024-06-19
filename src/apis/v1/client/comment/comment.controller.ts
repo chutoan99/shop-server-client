@@ -4,7 +4,8 @@ import CommentQuery from './comment.query'
 import CloudSystem from '~/systems/cloudinary/cloud.system'
 import { internalServerError } from '~/@core/systems/handle_errors'
 import STATUS_CODE from '~/@core/contains/statusCode.json'
-import Comment from './comment.entity'
+import { CommentModel } from './comment.model'
+import { CreateCommentDto } from './comment.dto'
 class CommentController {
 	private readonly _commentService: CommentService
 	private readonly _cloudSystem: CloudSystem
@@ -32,12 +33,12 @@ class CommentController {
 			const imageUrls: string[] = await this._cloudSystem.uploadFiles(
 				req.files
 			)
-			console.log(imageUrls, 'imageUrlsimageUrls')
-			const comment: Comment = req.body
-			imageUrls && (comment.images = JSON.stringify(imageUrls))
+			const payload: CreateCommentDto = req.body
+			imageUrls && (payload.images = JSON.stringify(imageUrls))
+      
 			const response = await this._commentService.Create(
 				+req.user.userid,
-				req.body
+				payload
 			)
 			return res.status(STATUS_CODE.SUCCESSFUL.OK).json(response)
 		} catch (error) {

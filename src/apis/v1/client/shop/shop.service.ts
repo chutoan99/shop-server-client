@@ -1,11 +1,11 @@
 import MESSAGE from '~/@core/contains/message.json'
 import ShopRepository from './shop.repository'
-import Post from '../post/post.entity'
-import Shop from './shop.entity'
 import RedisSystem from '~/systems/redis/redis.system'
 import { ShopItemsResponse, ShopResponse } from './shop.response'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'
+import { PostModel } from '../post/post.model'
+import { ShopModel } from './shop.model'
 
 export default class ShopService {
 	private readonly _redisSystem: RedisSystem
@@ -32,7 +32,7 @@ export default class ShopService {
 				}
 			}
 
-			const response: Post[] = await this._shopRepository.findItems(
+			const response: PostModel[] = await this._shopRepository.findItems(
 				shopid
 			)
 			if (_.isArray(response)) {
@@ -64,7 +64,7 @@ export default class ShopService {
 				}
 			}
 
-			const response: Shop = await this._shopRepository.find(shopid)
+			const response: ShopModel = await this._shopRepository.find(shopid)
 			if (response) {
 				await this._redisSystem.setCache(cacheKey, response)
 			}

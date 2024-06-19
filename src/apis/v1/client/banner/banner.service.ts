@@ -1,10 +1,10 @@
 import MESSAGE from '~/@core/contains/message.json'
-import Banner from './banner.entity'
 import BannerRepository from './banner.repository'
 import { BannerResponse } from './banner.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 import _ from 'lodash'
+import { BannerModel } from './banner.model'
 export default class BannerService {
 	protected cacheKey: string = 'banner'
 	private readonly _loggerSystem: LoggerSystem
@@ -20,7 +20,7 @@ export default class BannerService {
 	public FindAll = async (): Promise<BannerResponse> => {
 		try {
 			let total = 0
-			const cachedData: Banner[] = await this._redisSystem.getCache(
+			const cachedData: BannerModel[] = await this._redisSystem.getCache(
 				this.cacheKey
 			)
 			if (cachedData) {
@@ -32,7 +32,7 @@ export default class BannerService {
 				}
 			}
 
-			const response: Banner[] = await this._bannerRepository.findAll()
+			const response: BannerModel[] = await this._bannerRepository.findAll()
 			if (_.isArray(response)) {
 				total = response.length
 				await this._redisSystem.setCache(this.cacheKey, response)

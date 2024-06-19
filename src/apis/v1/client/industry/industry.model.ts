@@ -1,5 +1,5 @@
 import BaseModel from '~/systems/other/baseMode.system'
-export default interface Industry extends BaseModel {
+export  interface IndustryModel extends BaseModel {
 	id: number
 	parent_catid: number
 	level: number

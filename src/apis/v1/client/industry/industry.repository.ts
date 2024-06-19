@@ -1,15 +1,15 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
-import Industry from './industry.entity'
+import { ResultResponse } from '~/@core/systems/response'
 import IndustryQuery from './industry.query'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { LoggerSystem } from '~/systems/logger'
+import { IndustryModel } from './industry.model'
 interface IIndustryRepository {
-	findAll(): Promise<Industry[]>
+	findAll(): Promise<IndustryModel[]>
 	search(
 		pagination: PaginationSystem,
 		queries: IndustryQuery
-	): Promise<Industry[]>
+	): Promise<IndustryModel[]>
 }
 
 export default class IndustryRepository implements IIndustryRepository {
@@ -21,13 +21,13 @@ export default class IndustryRepository implements IIndustryRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public findAll = async (): Promise<Industry[]> => {
+	public findAll = async (): Promise<IndustryModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, parent_catid, level, category_name, images, createdAt, updatedAt  FROM Industries`
 			)
 
-			return response as Industry[]
+			return response as IndustryModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -39,9 +39,9 @@ export default class IndustryRepository implements IIndustryRepository {
 	public search = async (
 		pagination: PaginationSystem,
 		queries: IndustryQuery
-	): Promise<Industry[]> => {
+	): Promise<IndustryModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 					SELECT Posts.*, TotalCount.total
 					FROM Posts
 					INNER JOIN Industries ON Posts.catid = Industries.id
@@ -56,7 +56,7 @@ export default class IndustryRepository implements IIndustryRepository {
 					OFFSET ${pagination.offset}
       		`)
 
-			return response as Industry[]
+			return response as IndustryModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

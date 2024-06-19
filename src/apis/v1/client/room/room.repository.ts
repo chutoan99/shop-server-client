@@ -1,12 +1,12 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import Room from './room.entity'
 import { LoggerSystem } from '~/systems/logger'
+import { RoomModel } from './room.model'
 interface IRoomRepository {
-	findAll(userid: number): Promise<Room[]>
-	find(userid: number, shopid: number): Promise<Room>
-	create(room: Room): Promise<boolean>
+	findAll(userid: number): Promise<RoomModel[]>
+	find(userid: number, shopid: number): Promise<RoomModel>
+	create(room: RoomModel): Promise<boolean>
 }
 
 export default class RoomRepository implements IRoomRepository {
@@ -17,9 +17,9 @@ export default class RoomRepository implements IRoomRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<Room[]> => {
+	public findAll = async (userid: number): Promise<RoomModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT
 				Rooms.*,
 				JSON_OBJECT (
@@ -77,7 +77,7 @@ export default class RoomRepository implements IRoomRepository {
 				Rooms.userid = ${userid}
 			`)
 
-			return response as Room[]
+			return response as RoomModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -86,13 +86,13 @@ export default class RoomRepository implements IRoomRepository {
 		}
 	}
 
-	public find = async (shopid: number, userid: number): Promise<Room> => {
+	public find = async (shopid: number, userid: number): Promise<RoomModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT * FROM Rooms  WHERE  userid = ${userid} AND shopid = ${shopid}`
 			)
 
-			return (response as Room[])[0]
+			return (response as RoomModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -101,7 +101,7 @@ export default class RoomRepository implements IRoomRepository {
 		}
 	}
 
-	public create = async (room: Room): Promise<boolean> => {
+	public create = async (room: RoomModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(

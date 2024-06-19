@@ -1,7 +1,7 @@
 import { DateUnit } from 'mongoose'
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface FlashSale extends BaseModel {
+export  interface FlashSaleModel extends BaseModel {
 	id: number
 	shopid: number
 	catid: number

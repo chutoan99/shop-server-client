@@ -1,11 +1,11 @@
 import MESSAGE from '~/@core/contains/message.json'
 
 import NotifyRepository from './notify.repository'
-import Notify from './notify.entity'
 import { NotifyResponse } from './notify.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 import _ from 'lodash'
+import { NotifyModel } from './notify.model'
 
 export default class NotifyService {
 	protected cacheKey: string = 'notify'
@@ -31,7 +31,7 @@ export default class NotifyService {
 				}
 			}
 
-			const response: Notify[] | [] =
+			const response: NotifyModel[] | [] =
 				await this._notifyRepository.findAll()
 			let total = 0
 			if (_.isArray(response)) {

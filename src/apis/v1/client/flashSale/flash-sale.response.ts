@@ -1,8 +1,7 @@
-import FlashSale from './flash-sale.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { FlashSaleModel } from './flash-sale.model'
 
-export interface FlashSaleResponse {
-	err: number
-	msg: string
+export interface FlashSaleResponse extends BaseResponse {
 	total: number
-	response: FlashSale[]
+	response: FlashSaleModel[]
 }

@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export interface DeepDiscountSkin extends BaseModel {
+export interface DeepDiscountSkinModel extends BaseModel {
 	id: number
 	promotion_price: string
 	hidden_promotion_price: string
@@ -9,7 +9,7 @@ export interface DeepDiscountSkin extends BaseModel {
 	end_time: string
 }
 
-export interface Video extends BaseModel {
+export interface VideoModel extends BaseModel {
 	id: string
 	thumb_url: string | null
 	duration: number | null
@@ -21,7 +21,7 @@ export interface Video extends BaseModel {
 	url: string | null
 }
 
-export interface Voucher extends BaseModel {
+export interface VoucherModel extends BaseModel {
 	id: number
 	voucher_code: string
 	label: string

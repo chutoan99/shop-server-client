@@ -1,13 +1,13 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import Comment from './comment.entity'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { LoggerSystem } from '~/systems/logger'
+import { CommentModel } from './comment.model'
 
 interface ICommentRepository {
-	findAll(pagination: PaginationSystem): Promise<Comment[]>
-	create(comment: Comment): Promise<boolean>
+	findAll(pagination: PaginationSystem): Promise<CommentModel[]>
+	create(comment: CommentModel): Promise<boolean>
 }
 
 export default class CommentRepository implements ICommentRepository {
@@ -21,9 +21,9 @@ export default class CommentRepository implements ICommentRepository {
 	}
 	public findAll = async (
 		pagination: PaginationSystem
-	): Promise<Comment[]> => {
+	): Promise<CommentModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
         SELECT
             id, 
             'like_count', 
@@ -46,7 +46,7 @@ export default class CommentRepository implements ICommentRepository {
         OFFSET ${pagination.offset}
       `)
 
-			return response as Comment[]
+			return response as CommentModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -55,7 +55,7 @@ export default class CommentRepository implements ICommentRepository {
 		}
 	}
 
-	public create = async (comment: Comment): Promise<boolean> => {
+	public create = async (comment: CommentModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(

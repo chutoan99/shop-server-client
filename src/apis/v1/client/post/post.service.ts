@@ -1,10 +1,10 @@
-import Post from './post.entity'
 import MESSAGE from '~/@core/contains/message.json'
 import PostRepository from './post.repository'
 import PostQueries from './post.query'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { PostIdResponse, PostResponse } from './post.response'
 import { LoggerSystem } from '~/systems/logger'
+import { PostModel } from './post.model'
 
 export default class PostService {
 	private readonly _loggerSystem: LoggerSystem
@@ -17,7 +17,7 @@ export default class PostService {
 	public Search = async (queries: PostQueries): Promise<PostResponse> => {
 		try {
 			const pagination = new PaginationSystem(queries.limit, queries.page)
-			const response: Post[] = await this._postRepository.search(
+			const response: PostModel[] = await this._postRepository.search(
 				pagination,
 				queries
 			)
@@ -41,7 +41,7 @@ export default class PostService {
 
 	public Find = async (itemid: number): Promise<PostIdResponse> => {
 		try {
-			const response: Post = await this._postRepository.find(itemid)
+			const response: PostModel = await this._postRepository.find(itemid)
 
 			return {
 				err: 0,

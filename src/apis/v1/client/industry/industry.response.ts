@@ -1,19 +1,16 @@
-import Industry from './industry.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { IndustryModel } from './industry.model'
 
-export interface IndustryInterface {
-	err: number
-	msg: string
+export interface IndustryInterface extends BaseResponse {
 	total: number
-	response: Industry[]
+	response: IndustryModel[]
 }
 
-export interface SearchIndustryInterface {
-	err: number
-	msg: string
+export interface SearchIndustryInterface extends BaseResponse {
 	offset: number
 	limit: number
 	total: number
 	totalPage: number
 	currentPage: number
-	response: Industry[]
+	response: IndustryModel[]
 }

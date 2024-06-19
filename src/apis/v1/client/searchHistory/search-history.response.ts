@@ -1,8 +1,7 @@
-import SearchHistory from './search-history.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import {SearchHistoryModel} from './search-history.model'
 
-export interface SearchHistoryResponse {
-	err: number
-	msg: string
+export interface SearchHistoryResponse extends BaseResponse {
 	total: number
-	response: SearchHistory[]
+	response: SearchHistoryModel[]
 }

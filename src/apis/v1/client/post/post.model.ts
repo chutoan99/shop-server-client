@@ -1,5 +1,5 @@
 import BaseModel from '~/systems/other/baseMode.system'
-export default interface Post extends BaseModel {
+export  interface PostModel extends BaseModel {
 	id: number
 	shopid: number
 	catid: number

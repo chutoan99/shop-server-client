@@ -1,18 +1,18 @@
 import { LoggerSystem } from '~/systems/logger/logger.system'
 import { BaseDataBase } from '~/systems/dataBase'
 import { FieldPacket, ResultSetHeader } from 'mysql2'
-import User from '../user/user.entity'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
+import { UserModel } from '../user/user.model'
 
 interface IAuthRepository {
-	updateRefreshToken(user: User, token: string): Promise<boolean>
+	updateRefreshToken(user: UserModel, token: string): Promise<boolean>
 	updateToken(email: string, token: string, expires: number): Promise<boolean>
 	logout(userid: number): Promise<boolean>
 	resetPassword(email: string, password: string): Promise<boolean>
 	findUserRefreshAccessToken(
 		userid: number,
 		refreshToken: string
-	): Promise<User>
+	): Promise<UserModel>
 }
 
 export default class AuthRepository implements IAuthRepository {
@@ -26,7 +26,7 @@ export default class AuthRepository implements IAuthRepository {
 	}
 
 	public updateRefreshToken = async (
-		user: User,
+		user: UserModel,
 		token: string
 	): Promise<boolean> => {
 		try {
@@ -98,12 +98,12 @@ export default class AuthRepository implements IAuthRepository {
 	public findUserRefreshAccessToken = async (
 		userid: number,
 		refreshToken: string
-	): Promise<User> => {
+	): Promise<UserModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT * FROM Users WHERE id = '${userid}' AND refreshToken = '${refreshToken}'`
 			)
-			return (response as User[])[0]
+			return (response as UserModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

@@ -1,13 +1,14 @@
 import MESSAGE from '~/@core/contains/message.json'
 import { generateRoomId } from '~/helpers/generateId'
 import RoomRepository from './room.repository'
-import Room from './room.entity'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
 import { RoomResponse } from './room.response'
 import RedisSystem from '~/systems/redis/redis.system'
-import { WriteResponse } from '~/systems/other/response.system'
+import { BaseResponse } from '~/systems/other/response.system'
 import { LoggerSystem } from '~/systems/logger'
+import { RoomModel } from './room.model'
+import { CreateRoomDto } from './room.dto'
 
 export default class RoomService {
 	private readonly _loggerSystem: LoggerSystem
@@ -33,7 +34,7 @@ export default class RoomService {
 					response: cachedData
 				}
 			}
-			const response: Room[] | [] = await this._roomRepository.findAll(
+			const response: RoomModel[] | [] = await this._roomRepository.findAll(
 				userid
 			)
 			if (_.isArray(response)) {
@@ -53,9 +54,9 @@ export default class RoomService {
 	}
 
 	public Create = async (
-		payload: Room,
+		payload: CreateRoomDto,
 		userid: number
-	): Promise<WriteResponse> => {
+	): Promise<BaseResponse> => {
 		try {
 			const checkResult = await this.checkExistRoom(
 				userid,
@@ -64,7 +65,7 @@ export default class RoomService {
 			if (checkResult) {
 				return checkResult
 			}
-			const newRoom = Builder<Room>()
+			const newRoom = Builder<RoomModel>()
 				.id(generateRoomId(+userid, payload.shopid))
 				.shopid(payload.shopid)
 				.userid(userid)
@@ -74,17 +75,17 @@ export default class RoomService {
 				newRoom
 			)
 
-			if (isCreated) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
-				return {
+      if(!isCreated){
+        return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
-			}
+      }
+      return {
+        err: 0,
+        msg: MESSAGE.CREATE.SUCCESS
+      }
+			
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -92,7 +93,7 @@ export default class RoomService {
 	}
 
 	public checkExistRoom = async (userid: number, shopid: number) => {
-		const existingRoom: Room = await this._roomRepository.find(
+		const existingRoom: RoomModel = await this._roomRepository.find(
 			shopid,
 			userid
 		)

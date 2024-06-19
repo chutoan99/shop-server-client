@@ -1,7 +1,6 @@
-import Banner from './banner.entity'
-export interface BannerResponse {
-	err: number
-	msg: string
+import { BaseResponse } from '~/systems/other/response.system'
+import { BannerModel } from './banner.model'
+export interface BannerResponse extends BaseResponse {
 	total: number
-	response: Banner[]
+	response: BannerModel[]
 }

@@ -1,12 +1,13 @@
 import { LoggerSystem } from '~/systems/logger'
 import MESSAGE from '~/@core/contains/message.json'
 import UserRepository from './user.repository'
-import User from './user.entity'
 import CloudSystem from '~/systems/cloudinary/cloud.system'
 import { Builder } from 'builder-pattern'
 import _ from 'lodash'
 import UserResponse from './user.response'
-import { WriteResponse } from '~/systems/other/response.system'
+import { BaseResponse } from '~/systems/other/response.system'
+import { UserModel } from './user.model'
+import { UpdateUserDto } from './user.dto'
 export default class UserService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _userRepository: UserRepository
@@ -20,7 +21,7 @@ export default class UserService {
 
 	public FindUser = async (userid: number): Promise<UserResponse> => {
 		try {
-			const currentUser: User = await this._userRepository.currentUser(
+			const currentUser: UserModel = await this._userRepository.current(
 				userid
 			)
 
@@ -37,10 +38,10 @@ export default class UserService {
 
 	public UpdateUser = async (
 		userid: number,
-		payload: User
-	): Promise<WriteResponse> => {
+		payload: UpdateUserDto
+	): Promise<BaseResponse> => {
 		try {
-			const currentUser: User = await this._userRepository.currentUser(
+			const currentUser: UserModel = await this._userRepository.current(
 				userid
 			)
 
@@ -51,7 +52,7 @@ export default class UserService {
 				}
 			}
 
-			const newUser: User = Builder<User>()
+			const newUser: UserModel = Builder<UserModel>()
 				.id(userid)
 				.sex(+payload?.sex)
 				.email(payload?.email)
@@ -63,22 +64,22 @@ export default class UserService {
 				.avatar(payload?.avatar)
 				.build()
 
-			const idUpdated: boolean = await this._userRepository.updateUser(
+			const idUpdated: boolean = await this._userRepository.update(
 				newUser
 			)
 
-			if (idUpdated) {
-				this._cloudSystem.deleteFile(currentUser.filename)
-				return {
-					err: 0,
-					msg: MESSAGE.UPDATE.SUCCESS
-				}
-			} else {
+      if(!idUpdated){
 				return {
 					err: 1,
 					msg: MESSAGE.UPDATE.FAIL
 				}
-			}
+      }
+
+			this._cloudSystem.deleteFile(currentUser.filename)
+				return {
+					err: 0,
+					msg: MESSAGE.UPDATE.SUCCESS
+				}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -86,7 +87,7 @@ export default class UserService {
 	}
 
 	public checkExistUser = async (email: string) => {
-		const existingUser: User = await this._userRepository.findUser(email)
+		const existingUser: UserModel = await this._userRepository.findByEmail(email)
 		if (existingUser) {
 			return {
 				err: 1,

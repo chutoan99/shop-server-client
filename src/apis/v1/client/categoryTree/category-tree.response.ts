@@ -1,15 +1,12 @@
-import Category from './category-tree.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { CategoryModel } from './category-tree.model'
 
-export interface CategoryResponse {
-	err: number
-	msg: string
+export interface CategoryResponse extends BaseResponse {
 	total: number
-	response: Category[][]
+	response: CategoryModel[][]
 }
 
-export interface SearchCategoryResponse {
-	err: number
-	msg: string
+export interface SearchCategoryResponse extends BaseResponse {
 	total: number
-	response: Category[]
+	response: CategoryModel[]
 }

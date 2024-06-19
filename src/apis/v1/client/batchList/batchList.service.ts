@@ -1,11 +1,11 @@
 import MESSAGE from '~/@core/contains/message.json'
 
-import BatchList from './batchList.entity'
 import BatchListRepository from './batchList.repository'
 import { BatchListResponse } from './batchList.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { LoggerSystem } from '~/systems/logger'
+import { BatchListModel } from './batchList.model'
 
 export default class BatchListService {
 	protected cacheKey: string = 'batchList'
@@ -22,7 +22,7 @@ export default class BatchListService {
 	public FindAll = async (): Promise<BatchListResponse> => {
 		try {
 			let total = 0
-			const cachedData: BatchList[] = await this._redisSystem.getCache(
+			const cachedData: BatchListModel[] = await this._redisSystem.getCache(
 				this.cacheKey
 			)
 			if (cachedData) {
@@ -33,7 +33,7 @@ export default class BatchListService {
 					response: cachedData
 				}
 			}
-			const response: BatchList[] =
+			const response: BatchListModel[] =
 				await this._batchListRepository.findAll()
 
 			if (_.isArray(response)) {

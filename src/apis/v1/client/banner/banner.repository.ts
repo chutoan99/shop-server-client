@@ -1,10 +1,10 @@
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import { BaseDataBase } from '~/systems/dataBase'
-import Banner from './banner.entity'
 import { LoggerSystem } from '~/systems/logger'
+import { BannerModel } from './banner.model'
 
 interface IBannerRepository {
-	findAll(): Promise<Banner[]>
+	findAll(): Promise<BannerModel[]>
 }
 
 export default class BannerRepository implements IBannerRepository {
@@ -17,13 +17,13 @@ export default class BannerRepository implements IBannerRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public findAll = async (): Promise<Banner[]> => {
+	public findAll = async (): Promise<BannerModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(
+			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT id, image_url , createdAt , updatedAt  FROM Banners`
 			)
 
-			return response as Banner[]
+			return response as BannerModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

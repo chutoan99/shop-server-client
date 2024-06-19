@@ -1,16 +1,16 @@
 import { generateCartId } from '~/helpers/generateId'
 import MESSAGE from '~/@core/contains/message.json'
-import Cart from './cart.entity'
 import CartRepository from './cart.repository'
 import { Builder } from 'builder-pattern'
-import { LoggerSystem } from '~/systems/logger'
 import _ from 'lodash'
-import { WriteResponse } from '~/systems/other/response.system'
-
+import { BaseResponse } from '~/systems/other/response.system'
+import { CartModel } from './cart.model'
+import { CreateCartDto, UpdateCartDto } from './cart.dto'
+import { LoggerSystem } from '~/systems/logger'
 export default class CartService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _cartRepository: CartRepository
-  
+
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._cartRepository = new CartRepository()
@@ -18,7 +18,7 @@ export default class CartService {
 
 	public FindAll = async (userid: number): Promise<{}> => {
 		try {
-			const result: Cart[] | [] = await this._cartRepository.findAll(
+			const result: CartModel[] | [] = await this._cartRepository.findAll(
 				userid
 			)
 
@@ -58,11 +58,14 @@ export default class CartService {
 	}
 
 	public Create = async (
-		payload: Cart,
+		payload: CreateCartDto,
 		userid: number
-	): Promise<WriteResponse> => {
+	): Promise<BaseResponse> => {
 		try {
-			const cart: Cart = await this._cartRepository.find(payload, userid)
+			const cart: CartModel = await this._cartRepository.find(
+				payload as CartModel,
+				userid
+			)
 
 			if (cart) {
 				const idUpdated: boolean =
@@ -72,20 +75,20 @@ export default class CartService {
 						cart.amount + 1
 					)
 
-				if (idUpdated) {
-					return {
-						err: 0,
-						msg: MESSAGE.UPDATE.SUCCESS
-					}
-				} else {
+				if (!idUpdated) {
 					return {
 						err: 1,
 						msg: MESSAGE.UPDATE.FAIL
 					}
 				}
+
+				return {
+					err: 0,
+					msg: MESSAGE.UPDATE.SUCCESS
+				}
 			}
 
-			const newCart = Builder<Cart>()
+			const newCart = Builder<CartModel>()
 				.id(generateCartId())
 				.userid(userid)
 				.itemid(payload?.itemid)
@@ -98,16 +101,16 @@ export default class CartService {
 			const isCreated: boolean = await this._cartRepository.create(
 				newCart
 			)
-			if (isCreated) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
+			if (!isCreated) {
 				return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
+			}
+
+			return {
+				err: 0,
+				msg: MESSAGE.CREATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
@@ -117,24 +120,28 @@ export default class CartService {
 
 	public Update = async (
 		cartid: number,
-		payload: Cart
-	): Promise<WriteResponse> => {
+		payload: UpdateCartDto
+	): Promise<BaseResponse> => {
 		try {
+			const newCart: CartModel = Builder<CartModel>()
+				.item_option(payload.item_option)
+				.amount(payload.amount)
+				.build()
+
 			const isUpdated: boolean = await this._cartRepository.update(
 				cartid,
-				payload
+				newCart
 			)
 
-			if (isUpdated) {
-				return {
-					err: 0,
-					msg: MESSAGE.UPDATE.SUCCESS
-				}
-			} else {
+			if (!isUpdated) {
 				return {
 					err: 1,
 					msg: MESSAGE.UPDATE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.UPDATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
@@ -142,20 +149,19 @@ export default class CartService {
 		}
 	}
 
-	public Delete = async (cartid: number): Promise<WriteResponse> => {
+	public Delete = async (cartid: number): Promise<BaseResponse> => {
 		try {
 			const isDeleted: Boolean = await this._cartRepository.delete(cartid)
 
-			if (isDeleted) {
-				return {
-					err: 0,
-					msg: MESSAGE.DELETE.SUCCESS
-				}
-			} else {
+			if (!isDeleted) {
 				return {
 					err: 1,
 					msg: MESSAGE.DELETE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.DELETE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)

@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface Cart extends BaseModel {
+export  interface CartModel extends BaseModel {
 	id: number
 	shopid: number
 	amount: number

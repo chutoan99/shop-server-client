@@ -2,10 +2,12 @@ import MESSAGE from '~/@core/contains/message.json'
 import { generateOrderId } from '~/helpers/generateId'
 import OrderRepository from './order.repository'
 import OrderQueries from './order.queries'
-import Order, { stateOrder, titleStateOrder } from './order.entity'
+import { OrderModel } from './order.model'
+import {stateOrder, titleStateOrder,} from "./order.enum"
 import { Builder } from 'builder-pattern'
+import { BaseResponse } from '~/systems/other/response.system'
 import { LoggerSystem } from '~/systems/logger'
-import { WriteResponse } from '~/systems/other/response.system'
+import { CreateOrderDto } from './order.dto'
 export default class OrderService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _orderRepository: OrderRepository
@@ -17,7 +19,7 @@ export default class OrderService {
 	public Search = async (userid: number, queries: OrderQueries) => {
 		try {
 			const tab: any[] = await this._orderRepository.getTab(userid)
-			const response: Order[] = await this._orderRepository.search(
+			const response: OrderModel[] = await this._orderRepository.search(
 				userid,
 				queries
 			)
@@ -36,7 +38,9 @@ export default class OrderService {
 
 	public Find = async (orderid: number) => {
 		try {
-			const response: Order = await this._orderRepository.find(orderid)
+			const response: OrderModel = await this._orderRepository.find(
+				orderid
+			)
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
@@ -49,13 +53,13 @@ export default class OrderService {
 	}
 
 	public create = async (
-		payload: Order[],
+		payload: CreateOrderDto[],
 		userid: number
-	): Promise<WriteResponse> => {
+	): Promise<BaseResponse> => {
 		try {
 			const creationResults: boolean[] = []
 			for (const item of payload) {
-				const order = Builder<Order>()
+				const order = Builder<OrderModel>()
 					.id(generateOrderId())
 					.userid(userid)
 					.shopid(item.shopid)
@@ -76,16 +80,15 @@ export default class OrderService {
 				creationResults.push(isCreated)
 			}
 
-			if (creationResults.every((result) => result)) {
-				return {
-					err: 0,
-					msg: MESSAGE.CREATE.SUCCESS
-				}
-			} else {
+			if (!creationResults.every((result) => result)) {
 				return {
 					err: 1,
 					msg: MESSAGE.CREATE.FAIL
 				}
+			}
+			return {
+				err: 0,
+				msg: MESSAGE.CREATE.SUCCESS
 			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)

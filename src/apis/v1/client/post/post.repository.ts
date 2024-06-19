@@ -1,13 +1,13 @@
 import { BaseDataBase } from '~/systems/dataBase'
-import Post from './post.entity'
-import { BaseResponse } from '~/@core/systems/response'
+import { ResultResponse } from '~/@core/systems/response'
 import PostQuery from './post.query'
 import PaginationSystem from '~/systems/pagination/pagination.system'
 import { LoggerSystem } from '~/systems/logger'
+import { PostModel } from './post.model'
 
 interface IPostRepository {
-	find(itemid: number): Promise<Post>
-	search(pagination: PaginationSystem, queries: PostQuery): Promise<Post[]>
+	find(itemid: number): Promise<PostModel>
+	search(pagination: PaginationSystem, queries: PostQuery): Promise<PostModel[]>
 }
 
 export default class PostRepository implements IPostRepository {
@@ -19,9 +19,9 @@ export default class PostRepository implements IPostRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public find = async (itemid: number): Promise<Post> => {
+	public find = async (itemid: number): Promise<PostModel> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
             SELECT
               Posts.id,
               Posts.shopid,
@@ -141,7 +141,7 @@ export default class PostRepository implements IPostRepository {
             Posts.id = ${itemid}
       `)
 
-			return (response as Post[])[0]
+			return (response as PostModel[])[0]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -153,9 +153,9 @@ export default class PostRepository implements IPostRepository {
 	public search = async (
 		pagination: PaginationSystem,
 		queries: PostQuery
-	): Promise<Post[]> => {
+	): Promise<PostModel[]> => {
 		try {
-			const [response]: BaseResponse = await this._baseDataBase.db.query(`
+			const [response]: ResultResponse = await this._baseDataBase.db.query(`
         SELECT
             id,
             shopid,
@@ -187,7 +187,7 @@ export default class PostRepository implements IPostRepository {
           OFFSET ${pagination.offset}
       `)
 
-			return response as Post[]
+			return response as PostModel[]
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error

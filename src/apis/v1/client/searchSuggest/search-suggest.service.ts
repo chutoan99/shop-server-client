@@ -1,10 +1,10 @@
 import MESSAGE from '~/@core/contains/message.json'
 import SearchSuggestRepository from './search-suggest.repository'
-import SearchSuggest from './search-suggest.entity'
 import RedisSystem from '~/systems/redis/redis.system'
 import _ from 'lodash'
 import { SearchSuggestResponse } from './search-suggest.response'
 import { LoggerSystem } from '~/systems/logger'
+import { SearchSuggestModel } from './search-suggest.model'
 
 export default class SearchSuggestService {
 	protected cacheKey: string = 'search-suggest'
@@ -30,7 +30,7 @@ export default class SearchSuggestService {
 					response: cachedData
 				}
 			}
-			const response: SearchSuggest[] =
+			const response: SearchSuggestModel[] =
 				await this._searchSuggestRepository.findAll()
 
 			if (_.isArray(response)) {

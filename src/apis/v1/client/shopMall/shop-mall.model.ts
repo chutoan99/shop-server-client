@@ -1,6 +1,6 @@
 import BaseModel from '~/systems/other/baseMode.system'
 
-export default interface ShopMall extends BaseModel {
+export  interface ShopMallModel extends BaseModel {
 	id: number
 	url: string
 	image: string

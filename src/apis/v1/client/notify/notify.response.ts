@@ -1,8 +1,7 @@
-import Notify from './notify.entity'
+import { BaseResponse } from '~/systems/other/response.system'
+import { NotifyModel } from './notify.model'
 
-export interface NotifyResponse {
-	err: number
-	msg: string
+export interface NotifyResponse extends BaseResponse {
 	total: number
-	response: Notify[]
+	response: NotifyModel[]
 }

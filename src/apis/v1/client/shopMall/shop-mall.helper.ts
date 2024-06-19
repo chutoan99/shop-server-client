@@ -1,6 +1,6 @@
-import ShopMall from './shop-mall.entity'
+import { ShopMallModel } from "./shop-mall.model"
 
-export const formatShopMall = (shopMallList: ShopMall[]): ShopMall[][] => {
+export const formatShopMall = (shopMallList: ShopMallModel[]): ShopMallModel[][] => {
 	const ShopMallArray: any[][] = []
 	const lastIdx = shopMallList.length - 1
 

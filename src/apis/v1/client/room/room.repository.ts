@@ -4,8 +4,8 @@ import { FieldPacket, ResultSetHeader } from 'mysql2'
 import { LoggerSystem } from '~/systems/logger'
 import { RoomModel } from './room.model'
 interface IRoomRepository {
-	findAll(userid: number): Promise<RoomModel[]>
-	find(userid: number, shopid: number): Promise<RoomModel>
+	findAll(userId: number): Promise<RoomModel[]>
+	find(shopId: number, userId: number): Promise<RoomModel>
 	create(room: RoomModel): Promise<boolean>
 }
 
@@ -17,7 +17,7 @@ export default class RoomRepository implements IRoomRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<RoomModel[]> => {
+	public findAll = async (userId: number): Promise<RoomModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT
@@ -74,7 +74,7 @@ export default class RoomRepository implements IRoomRepository {
 				Rooms
 				LEFT JOIN Shops ON Rooms.shopid = Shops.id
 			WHERE
-				Rooms.userid = ${userid}
+				Rooms.userid = ${userId}
 			`)
 
 			return response as RoomModel[]
@@ -86,10 +86,10 @@ export default class RoomRepository implements IRoomRepository {
 		}
 	}
 
-	public find = async (shopid: number, userid: number): Promise<RoomModel> => {
+	public find = async (shopId: number, userId: number): Promise<RoomModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT * FROM Rooms  WHERE  userid = ${userid} AND shopid = ${shopid}`
+				`SELECT * FROM Rooms  WHERE  userid = ${userId} AND shopid = ${shopId}`
 			)
 
 			return (response as RoomModel[])[0]

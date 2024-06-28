@@ -5,6 +5,7 @@ import { FlashSaleResponse } from './flash-sale.response'
 import RedisSystem from '~/systems/redis/redis.system'
 import { LoggerSystem } from '~/systems/logger'
 import { FlashSaleModel } from './flash-sale.model'
+import _ from 'lodash'
 export default class FlashSaleService {
 	protected cacheKey: string = 'flash-sale'
 	private readonly _loggerSystem: LoggerSystem
@@ -18,29 +19,26 @@ export default class FlashSaleService {
 
 	public FindAll = async (): Promise<FlashSaleResponse> => {
 		try {
-			let total = 0
-
 			const cachedData = await this._redisSystem.getCache(this.cacheKey)
 
 			if (cachedData) {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: cachedData
 				}
 			}
 
 			const response: FlashSaleModel[] =
 				await this._flashSaleRepository.findAll()
-			if (Array.isArray(response)) {
-				total = response.length
+			if (_.isArray(response)) {
 				await this._redisSystem.setCache(this.cacheKey, response)
 			}
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response
 			}
 		} catch (error: any) {

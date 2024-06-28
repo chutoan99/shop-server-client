@@ -4,9 +4,9 @@ import { FieldPacket, ResultSetHeader } from 'mysql2'
 import { LoggerSystem } from '~/systems/logger'
 import { LikeModel } from './like.model'
 interface ILikeRepository {
-	findAll(userid: number): Promise<LikeModel[]>
+	findAll(userId: number): Promise<LikeModel[]>
 	find(id: number): Promise<LikeModel>
-	create(payload: LikeModel, userid: number): Promise<boolean>
+	create(payload: LikeModel): Promise<boolean>
 	delete(id: number): Promise<boolean>
 }
 
@@ -18,10 +18,10 @@ export default class LikeRepository implements ILikeRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<LikeModel[]> => {
+	public findAll = async (userId: number): Promise<LikeModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT id, userid, itemid, shopid, createdAt, updatedAt FROM Likes WHERE userid = ${userid}`
+				`SELECT id, userid, itemid, shopid, createdAt, updatedAt FROM Likes WHERE userid = ${userId}`
 			)
 
 			return response as LikeModel[]

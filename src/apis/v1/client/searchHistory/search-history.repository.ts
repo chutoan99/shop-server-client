@@ -4,7 +4,7 @@ import { FieldPacket, ResultSetHeader } from 'mysql2'
 import {SearchHistoryModel} from './search-history.model'
 import { LoggerSystem } from '~/systems/logger'
 interface ISearchHistoryRepository {
-	findAll(userid: number): Promise<SearchHistoryModel[]>
+	findAll(userId: number): Promise<SearchHistoryModel[]>
 	create(search: SearchHistoryModel): Promise<boolean>
 }
 
@@ -18,10 +18,10 @@ export default class SearchHistoryRepository
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<SearchHistoryModel[]> => {
+	public findAll = async (userId: number): Promise<SearchHistoryModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT id, userid, text, createdAt, updatedAt  FROM SearchHistories WHERE userid = ${userid} ORDER BY createdAt DESC LIMIT 10`
+				`SELECT id, userid, text, createdAt, updatedAt  FROM SearchHistories WHERE userid = ${userId} ORDER BY createdAt DESC LIMIT 10`
 			)
 
 			return response as SearchHistoryModel[]

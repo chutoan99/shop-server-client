@@ -22,7 +22,6 @@ export default class CategoriesTreeService {
 
 	public FindAll = async (level: number): Promise<CategoryResponse> => {
 		try {
-			let total = 0
 
 			const cacheKey: string = `category-tree-${level}`
 			const cachedData = await this._redisSystem.getCache(cacheKey)
@@ -31,7 +30,7 @@ export default class CategoriesTreeService {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: formatCategory(cachedData)
 				}
 			}
@@ -40,14 +39,13 @@ export default class CategoriesTreeService {
 				await this._categoriesRepository.findAll(level)
 
 			if (_.isArray(response)) {
-				total = response.length
 				await this._redisSystem.setCache(cacheKey, response)
 			}
 
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: formatCategory(response)
 			}
 		} catch (error: any) {
@@ -58,7 +56,6 @@ export default class CategoriesTreeService {
 
 	public Search = async (catid: number): Promise<SearchCategoryResponse> => {
 		try {
-			let total = 0
 			const cacheKey: string = `category-tree-${catid}`
 			const cachedData = await this._redisSystem.getCache(cacheKey)
 
@@ -66,7 +63,7 @@ export default class CategoriesTreeService {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: cachedData
 				}
 			}
@@ -75,14 +72,13 @@ export default class CategoriesTreeService {
 				await this._categoriesRepository.search(catid)
 
 			if (_.isArray(response)) {
-				total = response.length
 				await this._redisSystem.setCache(cacheKey, response)
 			}
 
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response as CategoryModel[]
 			}
 		} catch (error: any) {

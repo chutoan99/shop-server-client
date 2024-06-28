@@ -5,7 +5,7 @@ import { CategoryModel } from './category-tree.model'
 
 interface ICategoriesRepository {
 	findAll(level: number): Promise<CategoryModel[]>
-	search(catid: number): Promise<CategoryModel[]>
+	search(id: number): Promise<CategoryModel[]>
 }
 export default class CategoriesRepository implements ICategoriesRepository {
 	private readonly _loggerSystem: LoggerSystem
@@ -30,10 +30,10 @@ export default class CategoriesRepository implements ICategoriesRepository {
 		}
 	}
 
-	public search = async (catid: number): Promise<CategoryModel[]> => {
+	public search = async (id: number): Promise<CategoryModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT * FROM HomeCategories WHERE parent_catid = ${catid}`
+				`SELECT * FROM HomeCategories WHERE parent_catid = ${id}`
 			)
 
 			return response as CategoryModel[]

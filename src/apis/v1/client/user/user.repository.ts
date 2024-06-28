@@ -6,7 +6,7 @@ import {UserModel} from './user.model'
 
 interface IUserRepository {
 	findByEmail(email: string): Promise<UserModel>
-	current(userid: number): Promise<UserModel>
+	current(id: number): Promise<UserModel>
 	create(user: UserModel): Promise<boolean>
 	update(user: UserModel): Promise<boolean>
 }
@@ -36,7 +36,7 @@ export default class UserRepository implements IUserRepository {
 		}
 	}
 
-	public current = async (userid: number): Promise<UserModel> => {
+	public current = async (id: number): Promise<UserModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
 				`SELECT 
@@ -55,7 +55,7 @@ export default class UserRepository implements IUserRepository {
 					not_new_user, 
 					createdAt,
 					updatedAt
-				FROM Users WHERE id = ${userid} Limit 1`
+				FROM Users WHERE id = ${id} Limit 1`
 			)
 
 			return (response as UserModel[])[0]

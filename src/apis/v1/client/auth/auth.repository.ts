@@ -7,10 +7,10 @@ import { UserModel } from '../user/user.model'
 interface IAuthRepository {
 	updateRefreshToken(user: UserModel, token: string): Promise<boolean>
 	updateToken(email: string, token: string, expires: number): Promise<boolean>
-	logout(userid: number): Promise<boolean>
+	logout(userId: number): Promise<boolean>
 	resetPassword(email: string, password: string): Promise<boolean>
 	findUserRefreshAccessToken(
-		userid: number,
+		userId: number,
 		refreshToken: string
 	): Promise<UserModel>
 }
@@ -62,11 +62,11 @@ export default class AuthRepository implements IAuthRepository {
 		}
 	}
 
-	public logout = async (userid: number): Promise<boolean> => {
+	public logout = async (userId: number): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.query(
-					`UPDATE Users SET refreshToken = '' WHERE id = '${userid}'`
+					`UPDATE Users SET refreshToken = '' WHERE id = '${userId}'`
 				)
 			return response && response?.affectedRows === 1
 		} catch (error: any) {
@@ -96,12 +96,12 @@ export default class AuthRepository implements IAuthRepository {
 	}
 
 	public findUserRefreshAccessToken = async (
-		userid: number,
+		userId: number,
 		refreshToken: string
 	): Promise<UserModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT * FROM Users WHERE id = '${userid}' AND refreshToken = '${refreshToken}'`
+				`SELECT * FROM Users WHERE id = '${userId}' AND refreshToken = '${refreshToken}'`
 			)
 			return (response as UserModel[])[0]
 		} catch (error: any) {

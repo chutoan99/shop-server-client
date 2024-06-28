@@ -12,17 +12,17 @@ export default class UserService {
 	private readonly _loggerSystem: LoggerSystem
 	private readonly _userRepository: UserRepository
 	private readonly _cloudSystem: CloudSystem
-  
+
 	constructor() {
 		this._loggerSystem = new LoggerSystem()
 		this._userRepository = new UserRepository()
 		this._cloudSystem = new CloudSystem()
 	}
 
-	public FindUser = async (userid: number): Promise<UserResponse> => {
+	public FindUser = async (id: number): Promise<UserResponse> => {
 		try {
 			const currentUser: UserModel = await this._userRepository.current(
-				userid
+				id
 			)
 
 			return {
@@ -37,12 +37,12 @@ export default class UserService {
 	}
 
 	public UpdateUser = async (
-		userid: number,
+		id: number,
 		payload: UpdateUserDto
 	): Promise<BaseResponse> => {
 		try {
 			const currentUser: UserModel = await this._userRepository.current(
-				userid
+				id
 			)
 
 			if (!currentUser) {
@@ -53,7 +53,7 @@ export default class UserService {
 			}
 
 			const newUser: UserModel = Builder<UserModel>()
-				.id(userid)
+				.id(id)
 				.sex(+payload?.sex)
 				.email(payload?.email)
 				.name(payload?.name)
@@ -68,18 +68,18 @@ export default class UserService {
 				newUser
 			)
 
-      if(!idUpdated){
+			if (!idUpdated) {
 				return {
 					err: 1,
 					msg: MESSAGE.UPDATE.FAIL
 				}
-      }
+			}
 
 			this._cloudSystem.deleteFile(currentUser.filename)
-				return {
-					err: 0,
-					msg: MESSAGE.UPDATE.SUCCESS
-				}
+			return {
+				err: 0,
+				msg: MESSAGE.UPDATE.SUCCESS
+			}
 		} catch (error: any) {
 			this._loggerSystem.error(error)
 			throw error
@@ -87,7 +87,9 @@ export default class UserService {
 	}
 
 	public checkExistUser = async (email: string) => {
-		const existingUser: UserModel = await this._userRepository.findByEmail(email)
+		const existingUser: UserModel = await this._userRepository.findByEmail(
+			email
+		)
 		if (existingUser) {
 			return {
 				err: 1,

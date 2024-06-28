@@ -4,8 +4,8 @@ import { LoggerSystem } from '~/systems/logger'
 import { ShopModel } from './shop.model'
 import { PostModel } from '../post/post.model'
 interface IShopRepository {
-	findItems(shopid: number): Promise<PostModel[]>
-	find(shopid: number): Promise<ShopModel>
+	findItems(id: number): Promise<PostModel[]>
+	find(id: number): Promise<ShopModel>
 }
 
 export default class ShopRepository implements IShopRepository {
@@ -17,10 +17,10 @@ export default class ShopRepository implements IShopRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findItems = async (shopid: number): Promise<PostModel[]> => {
+	public findItems = async (id: number): Promise<PostModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(
-				`SELECT Posts.* FROM Shops LEFT JOIN Posts ON Shops.id = Posts.shopid WHERE Shops.id = ${shopid}`
+				`SELECT Posts.* FROM Shops LEFT JOIN Posts ON Shops.id = Posts.shopid WHERE Shops.id = ${id}`
 			)
 
 			return response as PostModel[]
@@ -32,7 +32,7 @@ export default class ShopRepository implements IShopRepository {
 		}
 	}
 
-	public find = async (shopid: number): Promise<ShopModel> => {
+	public find = async (id: number): Promise<ShopModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT 
@@ -61,7 +61,7 @@ export default class ShopRepository implements IShopRepository {
 					updatedAt  
 				FROM 
 					Shops
-				WHERE id = ${shopid} LIMIT 1
+				WHERE id = ${id} LIMIT 1
 			`)
 
 			return (response as ShopModel[])[0]

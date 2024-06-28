@@ -4,16 +4,16 @@ import { FieldPacket, ResultSetHeader } from 'mysql2'
 import { LoggerSystem } from '~/systems/logger'
 import { CartModel } from './cart.model'
 interface ICartRepository {
-	findAll(userid: number): Promise<CartModel[]>
-	find(cart: CartModel, userid: number): Promise<CartModel>
+	findAll(userId: number): Promise<CartModel[]>
+	find(cart: CartModel, userId: number): Promise<CartModel>
 	create(cart: CartModel): Promise<boolean>
-	update(cartid: number, cart: CartModel): Promise<boolean>
+	update(id: number, cart: CartModel): Promise<boolean>
 	updateAmount(
 		cart: CartModel,
-		userid: number,
+		userId: number,
 		newAmount: number
 	): Promise<boolean>
-	delete(cartid: number): Promise<boolean>
+	delete(id: number): Promise<boolean>
 }
 
 export default class CartRepository implements ICartRepository {
@@ -25,7 +25,7 @@ export default class CartRepository implements ICartRepository {
 		this._baseDataBase = new BaseDataBase()
 		this._baseDataBase.initDb()
 	}
-	public findAll = async (userid: number): Promise<CartModel[]> => {
+	public findAll = async (userId: number): Promise<CartModel[]> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 					SELECT
@@ -64,7 +64,7 @@ export default class CartRepository implements ICartRepository {
 						Carts
 						LEFT JOIN Posts ON Carts.itemid = Posts.id
 					WHERE
-						Carts.userid = ${userid}
+						Carts.userid = ${userId}
 					GROUP BY
 						Carts.id, Carts.userid, Carts.itemid, Carts.shopid, Carts.amount, Carts.item_option,
 						Posts.id, Posts.shopid, Posts.catid, Posts.name, Posts.image, Posts.historical_sold, Posts.discount, 
@@ -82,13 +82,13 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public find = async (cart: CartModel, userid: number): Promise<CartModel> => {
+	public find = async (cart: CartModel, userId: number): Promise<CartModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(`
 				SELECT  
 					* from Carts 
 				WHERE 
-					userid = '${userid}' AND 
+					userid = '${userId}' AND 
 					itemid = '${cart.itemid}' AND 
 					shopid = '${cart.shopid}' AND 
 					item_option = '${cart.item_option}' 
@@ -129,11 +129,11 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public update = async (cartid: number, cart: CartModel): Promise<boolean> => {
+	public update = async (id: number, cart: CartModel): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(
-					`UPDATE Carts SET item_option = '${cart.item_option}', amount = ${cart.amount} WHERE id = ${cartid}`
+					`UPDATE Carts SET item_option = '${cart.item_option}', amount = ${cart.amount} WHERE id = ${id}`
 				)
 
 			return response.affectedRows === 1
@@ -147,7 +147,7 @@ export default class CartRepository implements ICartRepository {
 
 	public updateAmount = async (
 		cart: CartModel,
-		userid: number,
+		userId: number,
 		newAmount: number
 	): Promise<boolean> => {
 		try {
@@ -155,13 +155,13 @@ export default class CartRepository implements ICartRepository {
 				._baseDataBase.db.query(`
       			UPDATE Carts
       				SET 
-						userid = ${userid}, 
+						userid = ${userId}, 
 						itemid = ${cart.itemid}, 
 						shopid = ${cart.shopid}, 
 						item_option = '${cart.item_option}', 
 						amount = ${newAmount}
       				WHERE 
-						userid = '${userid}' AND 
+						userid = '${userId}' AND 
 						itemid = '${cart.itemid}' AND 
 						shopid = '${cart.shopid}' AND 
 						item_option = '${cart.item_option}'
@@ -175,11 +175,11 @@ export default class CartRepository implements ICartRepository {
 		}
 	}
 
-	public delete = async (cartid: number): Promise<boolean> => {
+	public delete = async (id: number): Promise<boolean> => {
 		try {
 			const [response]: [ResultSetHeader, FieldPacket[]] =
 				await this._baseDataBase.db.execute(
-					`DELETE FROM Carts WHERE id = ${cartid}`
+					`DELETE FROM Carts WHERE id = ${id}`
 				)
 
 			return response.affectedRows === 1

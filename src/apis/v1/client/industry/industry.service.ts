@@ -23,27 +23,25 @@ export default class IndustryService {
 
 	public FindAll = async (): Promise<IndustryInterface> => {
 		try {
-			let total = 0
 			const cacheKey: string = 'industry'
 			const cachedData = await this._redisSystem.getCache(cacheKey)
 			if (cachedData) {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: cachedData
 				}
 			}
 			const response: IndustryModel[] =
 				await this._industryRepository.findAll()
 			if (_.isArray(response)) {
-				total = response.length
 				await this._redisSystem.setCache(cacheKey, response)
 			}
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response
 			}
 		} catch (error: any) {

@@ -19,7 +19,6 @@ export default class BannerService {
 
 	public FindAll = async (): Promise<BannerResponse> => {
 		try {
-			let total = 0
 			const cachedData: BannerModel[] = await this._redisSystem.getCache(
 				this.cacheKey
 			)
@@ -27,21 +26,22 @@ export default class BannerService {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: cachedData
 				}
 			}
 
-			const response: BannerModel[] = await this._bannerRepository.findAll()
+			const response: BannerModel[] =
+				await this._bannerRepository.findAll()
+
 			if (_.isArray(response)) {
-				total = response.length
 				await this._redisSystem.setCache(this.cacheKey, response)
 			}
 
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response
 			}
 		} catch (error: any) {

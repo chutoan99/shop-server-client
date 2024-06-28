@@ -6,6 +6,7 @@ import { LoggerSystem } from '~/systems/logger'
 import { BaseResponse } from '~/systems/other/response.system'
 import { SearchHistoryModel } from './search-history.model'
 import { CreateSearchHistoryDto } from './search-history.dto'
+import _ from 'lodash'
 
 export default class SearchHistoryService {
 	private readonly _loggerSystem: LoggerSystem
@@ -21,16 +22,12 @@ export default class SearchHistoryService {
 			const response: SearchHistoryModel[] =
 				await this._searchHistoryRepository.findAll(userid)
 
-			let total = 0
-
-			if (Array.isArray(response)) {
-				total = response.length
-			}
+			if (_.isArray(response)) {}
 
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response
 			}
 		} catch (error: any) {

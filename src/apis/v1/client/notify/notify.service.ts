@@ -26,22 +26,21 @@ export default class NotifyService {
 				return {
 					err: 0,
 					msg: MESSAGE.GET.SUCCESS,
-					total: cachedData.length,
+          total: _.size(cachedData),
 					response: cachedData
 				}
 			}
 
 			const response: NotifyModel[] | [] =
 				await this._notifyRepository.findAll()
-			let total = 0
+
 			if (_.isArray(response)) {
-				total = response.length
 				await this._redisSystem.setCache(this.cacheKey, response)
 			}
 			return {
 				err: 0,
 				msg: MESSAGE.GET.SUCCESS,
-				total: total,
+        total: _.size(response),
 				response: response
 			}
 		} catch (error: any) {

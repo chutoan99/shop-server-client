@@ -6,7 +6,7 @@ import { LoggerSystem } from '~/systems/logger'
 import { PostModel } from './post.model'
 
 interface IPostRepository {
-	find(itemid: number): Promise<PostModel>
+	find(id: number): Promise<PostModel>
 	search(pagination: PaginationSystem, queries: PostQuery): Promise<PostModel[]>
 }
 
@@ -19,7 +19,7 @@ export default class PostRepository implements IPostRepository {
 		this._baseDataBase.initDb()
 	}
 
-	public find = async (itemid: number): Promise<PostModel> => {
+	public find = async (id: number): Promise<PostModel> => {
 		try {
 			const [response]: ResultResponse = await this._baseDataBase.db.query(`
             SELECT
@@ -138,7 +138,7 @@ export default class PostRepository implements IPostRepository {
             LEFT JOIN Industries ON Posts.catid = Industries.id
             LEFT JOIN DeepDiscountSkins ON Posts.discountid = DeepDiscountSkins.id
           WHERE
-            Posts.id = ${itemid}
+            Posts.id = ${id}
       `)
 
 			return (response as PostModel[])[0]
